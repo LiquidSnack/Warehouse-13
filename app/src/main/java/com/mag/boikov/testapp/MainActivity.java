@@ -16,7 +16,7 @@ import android.widget.TextView;
 public class MainActivity extends ActionBarActivity {
 
     private TextView outputbox;
-    private TelephonyManager TM = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
+    private TelephonyManager telephonyManager = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +50,41 @@ public class MainActivity extends ActionBarActivity {
 
     public void runTest() {
         try {
-            CellInfo cellinfo = (CellInfo)TelephonyManager.getAllCellInfo().get();
+            String operatorName = telephonyManager.getNetworkOperatorName();
+
+            int phoneType = telephonyManager.getPhoneType();
+            String phoneTypeString;
+            switch(phoneType) {
+                case TelephonyManager.PHONE_TYPE_CDMA:
+                    phoneTypeString = "CDMA";
+                    break;
+                case TelephonyManager.PHONE_TYPE_GSM:
+                    phoneTypeString = "GSM";
+                    break;
+                case TelephonyManager.PHONE_TYPE_NONE:
+                    phoneTypeString = "No radio";
+                    break;
+                case TelephonyManager.PHONE_TYPE_SIP:
+                    phoneTypeString = "SIP";
+                    break;}
+
+            String NetCountryIso = telephonyManager.getNetworkCountryIso();
+
+            String NetOper = telephonyManager.getNetworkOperator();
+
+            int netType = telephonyManager.getNetworkType();
+            String netTypeString = "Unknown";
+            switch(netType) {
+                case TelephonyManager.NETWORK_TYPE_UMTS:
+                    netTypeString = "UMTS";
+                    break;
+                case TelephonyManager.NETWORK_TYPE_CDMA:
+                    netTypeString = "CDMA";
+                    break;
+                case TelephonyManager.NETWORK_TYPE_LTE:
+                    netTypeString = "LTE";
+                    break;
+            }
             outputbox.setText("");
         } catch (Exception e) {}
 
