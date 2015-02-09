@@ -16,6 +16,7 @@ import android.widget.TextView;
 public class MainActivity extends ActionBarActivity {
 
     private TextView outputbox;
+    private TelephonyManager TM = (TelephonyManager)getApplicationContext().getSystemService(Context.TELEPHONY_SERVICE);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
