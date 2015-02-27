@@ -85,6 +85,59 @@ public class MainActivity extends ActionBarActivity {
                     netTypeString = "LTE";
                     break;
             }
+            
+            List<CellInfo> cellInfos = telephonyManager.getAllCellInfo();
+            for(CellInfo cellInfo : cellInfos) {
+                if(cellInfo instanceof CellInfoCdma) {
+                    CellInfoCdma cdma = (CellInfoCdma) cellInfo;
+                    CellSignalStrengthCdma signalStrengthCdma = cdma.getCellSignalStrength();
+                    int asuLevel = signalStrengthCdma.getAsuLevel();
+                    int dbm = signalStrengthCdma.getDbm();
+                    CellIdentityCdma cellIdentityCdma = cdma.getCellIdentity();
+                    int baseED = cellIdentityCdma.getBasestationId();
+                    int latitude = cellIdentityCdma.getLatitude();
+                    int longitude = cellIdentityCdma.getLongitude();
+                    int netID = cellIdentityCdma.getNetworkId();
+                    int sysID = cellIdentityCdma.getSystemId();
+
+                } else if(cellInfo instanceof CellInfoGsm) {
+                    CellInfoGsm gsm = (CellInfoGsm) cellInfo;
+                    CellSignalStrengthGsm signalStrengthGsm = gsm.getCellSignalStrength();
+                    int asuLevel = signalStrengthGsm.getAsuLevel();
+                    int dbm = signalStrengthGsm.getDbm();
+                    CellIdentityGsm cellIdentityGsm = gsm.getCellIdentity();
+                    int cid = cellIdentityGsm.getCid();
+                    int lac = cellIdentityGsm.getLac();
+                    int mcc = cellIdentityGsm.getMcc();
+                    int mnc = cellIdentityGsm.getMnc();
+
+                } else if(cellInfo instanceof CellInfoLte) {
+                    CellInfoLte lte = (CellInfoLte) cellInfo;
+                    CellSignalStrengthLte signalStrengthLte = lte.getCellSignalStrength();
+                    int asuLevel = signalStrengthLte.getAsuLevel();
+                    int dbm = signalStrengthLte.getDbm();
+                    CellIdentityLte cellIdentityLte = lte.getCellIdentity();
+                    int ci = cellIdentityLte.getCi();
+                    int mcc = cellIdentityLte.getMcc();
+                    int mnc = cellIdentityLte.getMnc();
+                    int pci = cellIdentityLte.getPci();
+                    int tac = cellIdentityLte.getTac();
+
+                } else if(cellInfo instanceof CellInfoWcdma) {
+                    CellInfoWcdma wcdma = (CellInfoWcdma) cellInfo;
+                    CellSignalStrengthWcdma signalStrengthWcdma = wcdma.getCellSignalStrength();
+                    int asuLevel = signalStrengthWcdma.getAsuLevel();
+                    int dbm = signalStrengthWcdma.getDbm();
+                    CellIdentityWcdma cellIdentityWcdma = wcdma.getCellIdentity();
+                    int cid = cellIdentityWcdma.getCid();
+                    int lac = cellIdentityWcdma.getLac();
+                    int mcc = cellIdentityWcdma.getMcc();
+                    int mnc = cellIdentityWcdma.getMnc();
+                    int psc = cellIdentityWcdma.getPsc();
+
+                }
+            }
+            
             outputbox.setText("");
         } catch (Exception e) {}
 
