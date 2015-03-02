@@ -58,6 +58,8 @@ public class MainActivity extends ActionBarActivity {
     void performNetworkTest() {
         outputBox.setText("");
         outputBox.append("Operator: " + phoneInfo.getOperatorName());
+        outputBox.append('\n' + "Network Country: " + phoneInfo.getNetworkCountry());
+        outputBox.append('\n' + "Network Operator: " + phoneInfo.getNetworkOperator());
         for (Map.Entry<String, String> cellInfo : phoneInfo.getAllCellInfo()
                                                            .entrySet()) {
             outputBox.append('\n' + cellInfo.getKey() + ": " + cellInfo.getValue());
