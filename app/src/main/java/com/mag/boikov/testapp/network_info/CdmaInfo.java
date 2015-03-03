@@ -25,7 +25,7 @@ public class CdmaInfo implements PhoneCellInfo {
 
     @Override
     public String name() {
-        return "CDMA";
+        return "Network type - CDMA";
     }
 
     @Override
@@ -33,13 +33,13 @@ public class CdmaInfo implements PhoneCellInfo {
         final StringBuilder sb = new StringBuilder("Cell Info{");
         sb.append("baseED=")
           .append(baseED);
-        sb.append(", latitude=")
+        sb.append("," + '\n' +" latitude=")
           .append(latitude);
-        sb.append(", longitude=")
+        sb.append("," + '\n' +" longitude=")
           .append(longitude);
-        sb.append(", netId=")
+        sb.append("," + '\n' +" netId=")
           .append(netId);
-        sb.append(", sysId=")
+        sb.append("," + '\n' +" sysId=")
           .append(sysId);
         sb.append('}');
         return sb.toString();

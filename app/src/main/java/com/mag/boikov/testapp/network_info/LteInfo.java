@@ -29,7 +29,7 @@ public class LteInfo implements PhoneCellInfo {
 
     @Override
     public String name() {
-        return "LTE";
+        return "Network type - LTE";
     }
 
     @Override
@@ -37,17 +37,17 @@ public class LteInfo implements PhoneCellInfo {
         final StringBuilder sb = new StringBuilder("Cell Info{");
         sb.append("asuLevel=")
           .append(asuLevel);
-        sb.append(", dbm=")
+        sb.append("," + '\n' +" dbm=")
           .append(dbm);
-        sb.append(", ci=")
+        sb.append("," + '\n' +" ci=")
           .append(ci);
-        sb.append(", mcc=")
+        sb.append("," + '\n' +" mcc=")
           .append(mcc);
-        sb.append(", mnc=")
+        sb.append("," + '\n' +" mnc=")
           .append(mnc);
-        sb.append(", pci=")
+        sb.append("," + '\n' +" pci=")
           .append(pci);
-        sb.append(", tac=")
+        sb.append("," + '\n' +" tac=")
           .append(tac);
         sb.append('}');
         return sb.toString();

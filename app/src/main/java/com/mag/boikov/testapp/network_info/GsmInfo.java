@@ -27,7 +27,7 @@ public class GsmInfo implements PhoneCellInfo {
 
     @Override
     public String name() {
-        return "GSM";
+        return "Network type - GSM";
     }
 
     @Override
@@ -35,15 +35,15 @@ public class GsmInfo implements PhoneCellInfo {
         final StringBuilder sb = new StringBuilder("Cell Info{");
         sb.append("asuLevel=")
           .append(asuLevel);
-        sb.append(", dbm=")
+        sb.append("," + '\n' +"dbm=")
           .append(dbm);
-        sb.append(", cid=")
+        sb.append("," + '\n' +" cid=")
           .append(cid);
-        sb.append(", lac=")
+        sb.append("," + '\n' +" lac=")
           .append(lac);
-        sb.append(", mcc=")
+        sb.append("," + '\n' +" mcc=")
           .append(mcc);
-        sb.append(", mnc=")
+        sb.append("," + '\n' +" mnc=")
           .append(mnc);
         sb.append('}');
         return sb.toString();
