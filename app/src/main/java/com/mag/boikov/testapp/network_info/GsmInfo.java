@@ -32,7 +32,7 @@ public class GsmInfo implements PhoneCellInfo {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("GsmInfo{");
+        final StringBuilder sb = new StringBuilder("Cell Info{");
         sb.append("asuLevel=")
           .append(asuLevel);
         sb.append(", dbm=")

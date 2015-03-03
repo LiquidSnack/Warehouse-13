@@ -30,7 +30,7 @@ public class CdmaInfo implements PhoneCellInfo {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("CdmaInfo{");
+        final StringBuilder sb = new StringBuilder("Cell Info{");
         sb.append("baseED=")
           .append(baseED);
         sb.append(", latitude=")

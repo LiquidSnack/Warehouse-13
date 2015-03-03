@@ -34,7 +34,7 @@ public class LteInfo implements PhoneCellInfo {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("LteInfo{");
+        final StringBuilder sb = new StringBuilder("Cell Info{");
         sb.append("asuLevel=")
           .append(asuLevel);
         sb.append(", dbm=")
