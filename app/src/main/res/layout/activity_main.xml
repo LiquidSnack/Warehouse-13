@@ -16,27 +16,27 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Output:"
         android:id="@+id/outputbox"
-        android:layout_centerVertical="true"
-        android:layout_alignLeft="@+id/Title"
-        android:layout_alignStart="@+id/Title"
-        android:enabled="false" />
+        android:enabled="false"
+        android:layout_marginTop="37dp"
+        android:layout_below="@+id/StartTest"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/start_button"
         android:id="@+id/StartTest"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="49dp" />
+        android:layout_marginTop="43dp"
+        android:layout_below="@+id/Title"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/send_button"
         android:id="@+id/Send"
-        android:layout_below="@+id/StartTest"
-        android:layout_centerHorizontal="true"
-        android:enabled="false" />
+        android:enabled="false"
+        android:layout_alignTop="@+id/StartTest"
+        android:layout_toEndOf="@+id/Title" />
 
 </RelativeLayout>
