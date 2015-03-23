@@ -31,6 +31,14 @@ public class MainActivity extends ActionBarActivity {
                 performNetworkTest();
             }
         });
+        Button sendButton = (Button) findViewById(R.id.Send);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendData();
+            }
+        });
+
     }
 
     @Override
@@ -64,5 +72,9 @@ public class MainActivity extends ActionBarActivity {
                                                            .entrySet()) {
             outputBox.append('\n' + cellInfo.getKey() + ": " + cellInfo.getValue());
         }
+    }
+
+    void sendData() {
+
     }
 }

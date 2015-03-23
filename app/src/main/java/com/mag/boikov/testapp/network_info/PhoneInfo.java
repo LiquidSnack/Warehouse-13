@@ -4,12 +4,22 @@ import android.content.Context;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.text.SimpleDateFormat;
 
 public class PhoneInfo {
     TelephonyManager telephonyManager;
+
+    int date;
+    int month;
+    int year;
+    int hour;
+    int minute;
+    int second;
 
     public static PhoneInfo fromContext(Context context) {
         PhoneInfo phoneInfo = new PhoneInfo();
@@ -55,6 +65,11 @@ public class PhoneInfo {
             default:
                 return "Undetermined";
         }
+    }
+
+    public String TimeDate() {
+        String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
+        return currentDateTimeString;
     }
 
     public Map<String, String> getAllCellInfo() {
