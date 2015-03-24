@@ -4,6 +4,9 @@ import android.content.Context;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -80,5 +83,29 @@ public class PhoneInfo {
             cellInfoByCellType.put(phoneCellInfo.name(), phoneCellInfo.toString());
         }
         return cellInfoByCellType;
+    }
+
+    public String ping() {
+        String str = "https://www.ss.lv/";
+        try {
+            Process process = Runtime.getRuntime().exec(
+                    "/system/bin/ping -c 8 " + str);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    process.getInputStream()));
+            int i;
+            char[] buffer = new char[4096];
+            StringBuffer output = new StringBuffer();
+            while ((i = reader.read(buffer)) > 0)
+                output.append(buffer, 0, i);
+            reader.close();
+
+            // body.append(output.toString()+"\n");
+            str = output.toString();
+            // Log.d(TAG, str);
+        } catch (IOException e) {
+            // body.append("Error\n");
+            e.printStackTrace();
+        }
+        return str;
     }
 }

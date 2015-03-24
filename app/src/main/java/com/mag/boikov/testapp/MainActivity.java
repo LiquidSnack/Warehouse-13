@@ -72,6 +72,8 @@ public class MainActivity extends ActionBarActivity {
                                                            .entrySet()) {
             outputBox.append('\n' + cellInfo.getKey() + ": " + cellInfo.getValue());
         }
+        outputBox.append('\n' + "Datums:" + phoneInfo.TimeDate());
+        outputBox.append('\n' + "Ping:" + phoneInfo.ping());
     }
 
     void sendData() {
