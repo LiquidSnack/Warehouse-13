@@ -7,6 +7,8 @@ import android.telephony.TelephonyManager;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,13 +18,6 @@ import java.text.SimpleDateFormat;
 
 public class PhoneInfo {
     TelephonyManager telephonyManager;
-
-    int date;
-    int month;
-    int year;
-    int hour;
-    int minute;
-    int second;
 
     public static PhoneInfo fromContext(Context context) {
         PhoneInfo phoneInfo = new PhoneInfo();
@@ -86,7 +81,27 @@ public class PhoneInfo {
     }
 
     public String ping() {
-        String str = "https://www.ss.lv/";
+        InetAddress addr = null;
+        String host = "194.105.56.170";
+        String str = "";
+        try {
+            addr = InetAddress.getByName(host);
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (addr.isReachable(5000)) {
+                str = (host + " -Respond OK");
+            } else {
+                str = (host);
+            }
+        } catch (IOException e) {
+            str = (e.toString());
+
+        }
+        return str;
+
+        /*String str = "https://www.ss.lv/";
         try {
             Process process = Runtime.getRuntime().exec(
                     "/system/bin/ping -c 8 " + str);
@@ -105,7 +120,8 @@ public class PhoneInfo {
         } catch (IOException e) {
             // body.append("Error\n");
             e.printStackTrace();
-        }
-        return str;
+        }*/
+        //return str;
+        //}
     }
 }
