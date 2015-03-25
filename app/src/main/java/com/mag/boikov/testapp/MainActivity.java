@@ -1,13 +1,20 @@
 package com.mag.boikov.testapp;
 
+import android.content.Context;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.text.method.ScrollingMovementMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.app.Activity;
+import android.content.Context;
 
+import com.mag.boikov.testapp.network_info.MyLocationListener;
 import com.mag.boikov.testapp.network_info.PhoneInfo;
 
 import java.util.Map;
@@ -23,6 +30,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         outputBox = (TextView) findViewById(R.id.outputbox);
+        outputBox.setMovementMethod(new ScrollingMovementMethod());
         phoneInfo = PhoneInfo.fromContext(getApplicationContext());
         Button startTestButton = (Button) findViewById(R.id.StartTest);
         startTestButton.setOnClickListener(new View.OnClickListener() {
@@ -38,6 +46,14 @@ public class MainActivity extends ActionBarActivity {
                 sendData();
             }
         });
+
+        LocationManager mlocManager =
+
+                (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+
+        LocationListener mlocListener = new MyLocationListener();
+
+        mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
 
     }
 
@@ -74,6 +90,8 @@ public class MainActivity extends ActionBarActivity {
         }
         outputBox.append('\n' + "Datums:" + phoneInfo.TimeDate());
         outputBox.append('\n' + "Ping:" + phoneInfo.ping());
+        outputBox.append('\n' + "GPS koordinates: Platums =" + MyLocationListener.latitude);
+        outputBox.append('\n' + "Garums=" + MyLocationListener.longitude);
     }
 
     void sendData() {
