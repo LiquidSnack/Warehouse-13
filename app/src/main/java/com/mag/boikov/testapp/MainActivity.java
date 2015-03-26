@@ -1,6 +1,8 @@
 package com.mag.boikov.testapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.mag.boikov.testapp.network_info.MyLocationListener;
+import com.mag.boikov.testapp.network_info.NetFunctions;
 import com.mag.boikov.testapp.network_info.PhoneInfo;
 
 import java.util.Map;
@@ -55,6 +58,18 @@ public class MainActivity extends ActionBarActivity {
 
         mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
 
+        NetFunctions lNetFunctions = new NetFunctions(this);
+
+        AlertDialog alert = new AlertDialog.Builder(this).create(); //предупреждение
+        alert.setTitle("Error");
+        alert.setMessage("No network connection");
+        alert.setButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
     }
 
     @Override
@@ -92,6 +107,7 @@ public class MainActivity extends ActionBarActivity {
         outputBox.append('\n' + "Ping:" + phoneInfo.ping());
         outputBox.append('\n' + "GPS koordinates: Platums =" + MyLocationListener.latitude);
         outputBox.append('\n' + "Garums=" + MyLocationListener.longitude);
+        //Если isConnected в NetFunctions даёт false, вывести предупреждение
     }
 
     void sendData() {
