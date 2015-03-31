@@ -13,15 +13,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.app.Activity;
+import android.content.Context;
 
-import com.mag.boikov.testapp.communications.StatisticsSender;
 import com.mag.boikov.testapp.network_info.MyLocationListener;
 import com.mag.boikov.testapp.network_info.NetFunctions;
 import com.mag.boikov.testapp.network_info.PhoneInfo;
 
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -33,7 +32,7 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        outputBox = (TextView) findViewById(R.id.outputBox);
+        outputBox = (TextView) findViewById(R.id.outputbox);
         outputBox.setMovementMethod(new ScrollingMovementMethod());
         phoneInfo = PhoneInfo.fromContext(getApplicationContext());
         Button startTestButton = (Button) findViewById(R.id.StartTest);
@@ -51,23 +50,26 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        LocationManager mlocManager =
 
-        LocationListener locationListener = new MyLocationListener();
+                (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        LocationListener mlocListener = new MyLocationListener();
 
-        NetFunctions netFunctions = new NetFunctions(this);
+        mlocManager.requestLocationUpdates( LocationManager.GPS_PROVIDER, 0, 0, mlocListener);
+
+        NetFunctions lNetFunctions = new NetFunctions(this);
 
         AlertDialog alert = new AlertDialog.Builder(this).create(); //предупреждение
         alert.setTitle("Error");
         alert.setMessage("No network connection");
-        alert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+        alert.setButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
             }
         });
+
     }
 
     @Override
@@ -109,11 +111,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
     void sendData() {
-        try {
-            outputBox.setText(new StatisticsSender().execute()
-                                                    .get());
-        } catch (Exception e) {
-            // log exception
-        }
+
     }
 }
