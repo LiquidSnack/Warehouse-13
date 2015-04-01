@@ -80,26 +80,7 @@ public class PhoneInfo {
         return cellInfoByCellType;
     }
 
-    public String ping() {
-        InetAddress addr = null;
-        String host = "194.105.56.170";
-        String str = "";
-        try {
-            addr = InetAddress.getByName(host);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (addr.isReachable(5000)) {
-                str = (host + " -Respond OK");
-            } else {
-                str = (host);
-            }
-        } catch (IOException e) {
-            str = (e.toString());
 
-        }
-        return str;
 
         /*String str = "https://www.ss.lv/";
         try {
@@ -123,5 +104,5 @@ public class PhoneInfo {
         }*/
         //return str;
         //}
-    }
+
 }
