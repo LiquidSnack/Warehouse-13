@@ -4,20 +4,16 @@ import android.content.Context;
 import android.telephony.CellInfo;
 import android.telephony.TelephonyManager;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.text.SimpleDateFormat;
 
 public class PhoneInfo {
     TelephonyManager telephonyManager;
+
+    Date testPerformedAt;
 
     public static PhoneInfo fromContext(Context context) {
         PhoneInfo phoneInfo = new PhoneInfo();
@@ -65,11 +61,6 @@ public class PhoneInfo {
         }
     }
 
-    public String TimeDate() {
-        String currentDateTimeString = DateFormat.getDateTimeInstance().format(new Date());
-        return currentDateTimeString;
-    }
-
     public Map<String, String> getAllCellInfo() {
         List<CellInfo> infos = telephonyManager.getAllCellInfo();
         Map<String, String> cellInfoByCellType = new HashMap<>(infos.size());
@@ -80,29 +71,19 @@ public class PhoneInfo {
         return cellInfoByCellType;
     }
 
+    public TelephonyManager getTelephonyManager() {
+        return telephonyManager;
+    }
 
+    public void setTelephonyManager(TelephonyManager telephonyManager) {
+        this.telephonyManager = telephonyManager;
+    }
 
-        /*String str = "https://www.ss.lv/";
-        try {
-            Process process = Runtime.getRuntime().exec(
-                    "/system/bin/ping -c 8 " + str);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(
-                    process.getInputStream()));
-            int i;
-            char[] buffer = new char[4096];
-            StringBuffer output = new StringBuffer();
-            while ((i = reader.read(buffer)) > 0)
-                output.append(buffer, 0, i);
-            reader.close();
+    public Date getTestPerformedAt() {
+        return testPerformedAt;
+    }
 
-            // body.append(output.toString()+"\n");
-            str = output.toString();
-            // Log.d(TAG, str);
-        } catch (IOException e) {
-            // body.append("Error\n");
-            e.printStackTrace();
-        }*/
-        //return str;
-        //}
-
+    public void setTestPerformedAt(Date testPerformedAt) {
+        this.testPerformedAt = testPerformedAt;
+    }
 }
