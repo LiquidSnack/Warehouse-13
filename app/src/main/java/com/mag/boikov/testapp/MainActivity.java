@@ -8,18 +8,25 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.app.Activity;
 import android.content.Context;
+import org.json.JSONObject;
 
 import com.mag.boikov.testapp.communications.StatisticsSender;
 import com.mag.boikov.testapp.network_info.MyLocationListener;
 import com.mag.boikov.testapp.network_info.NetFunctions;
 import com.mag.boikov.testapp.network_info.PhoneInfo;
+
+import org.json.JSONObject;
+
+import java.io.InputStream;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -32,6 +39,19 @@ public class MainActivity extends ActionBarActivity {
     PhoneInfo phoneInfo;
     NetFunctions netFunctions;
     MyLocationListener locationListener;
+
+    public class Data {
+        private String operatorName;
+        private String networkCountry;
+        private String networkOperator;
+        //private String cellInfo;
+        private String dateTime;
+        //private String ping;
+        private String gpsLatitude;
+        private String gpsLongitude;
+        //private String downSpeed;
+        //private String upSpeed;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +89,24 @@ public class MainActivity extends ActionBarActivity {
 
     }
 
+    public static String POST (String url, Data data){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+            String json = "";
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.accumulate("operator name", phoneInfo.getOperatorName());
+            jsonObject.accumulate("network country", phoneInfo.getNetworkCountry());
+            jsonObject.accumulate("network operator", phoneInfo.getNetworkOperator());
+            jsonObject.accumulate("Date/Time", phoneInfo.TimeDate());
+            jsonObject.accumulate("Platums", locationListener.getLatitude());
+            jsonObject.accumulate("Garums", locationListener.getLongitude());
+        } catch (Exception e) {
+            Log.d("InputStream", e.getLocalizedMessage());
+        }
+        return result;
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -101,7 +139,7 @@ public class MainActivity extends ActionBarActivity {
             outputBox.append('\n' + cellInfo.getKey() + ": " + cellInfo.getValue());
         }
         outputBox.append('\n' + "Datums:" + phoneInfo.TimeDate());
-        outputBox.append('\n' + "Ping:" + netFunctions.ping());
+        //outputBox.append('\n' + "Ping:" + netFunctions.ping());
         outputBox.append('\n' + "GPS koordinates: Platums =" + locationListener.getLatitude());
         outputBox.append('\n' + "Garums=" + locationListener.getLongitude());
         //Если isConnected в NetFunctions даёт false, вывести предупреждение
