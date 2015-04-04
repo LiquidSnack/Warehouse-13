@@ -10,11 +10,12 @@ import android.content.Intent;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
-public class MyLocationListener extends Service implements LocationListener {
+public class MyLocationListener extends AsyncTask<Void, Void, GpsData> implements LocationListener {
 
     public double latitude;
     public double longitude;
@@ -32,12 +33,20 @@ public class MyLocationListener extends Service implements LocationListener {
 
     protected LocationManager locationManager;
 
+    @Override
+    protected GpsData doInBackground(Void... params) {
+        GpsData gpsData = getLocation();
+        gpsData.setLatitude(getLatitude());
+        gpsData.setLongitude(getLongitude());
+        return gpsData;
+    }
+
     public MyLocationListener(Context context) {
         this.mContext = context;
         getLocation();
     }
 
-    public Location getLocation() {
+    public GpsData getLocation() {
         try {
             locationManager = (LocationManager) mContext.getSystemService(Service.LOCATION_SERVICE);
             isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -52,6 +61,7 @@ public class MyLocationListener extends Service implements LocationListener {
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
+                            return asGpsData(latitude,longitude);
                         }
                     }
                 }
@@ -65,6 +75,7 @@ public class MyLocationListener extends Service implements LocationListener {
                             if (location != null) {
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
+                                return asGpsData(latitude,longitude);
                             }
                         }
                     }
@@ -73,7 +84,7 @@ public class MyLocationListener extends Service implements LocationListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return location;
+        return new GpsData();
     }
 
     @Override
@@ -112,10 +123,10 @@ public class MyLocationListener extends Service implements LocationListener {
     }
 
 
-    @Override
+   /* @Override
     public IBinder onBind(Intent intent) {
         return null;
-    }
+    }*/
 
     public double getLatitude() {
         if (location != null) {
@@ -129,5 +140,12 @@ public class MyLocationListener extends Service implements LocationListener {
             longitude = location.getLongitude();
         }
         return longitude;
+    }
+
+    private GpsData asGpsData(double latitude, double longitude) {
+        GpsData gpsData = new GpsData();
+        gpsData.setLatitude(latitude);
+        gpsData.setLongitude(longitude);
+        return gpsData;
     }
 }

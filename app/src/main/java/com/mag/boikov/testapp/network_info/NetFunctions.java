@@ -29,14 +29,32 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
     }
 
     Double calculatePing() {
-        return null;
+        double ping = 0;
+        ping = ping + getPingTime();
+        return ping;
     }
 
-    String getAddress() {
+    double getPingTime() {
         InetAddress addr = null;
-        String host = "194.105.56.170";
+        String host = "52.11.170.103:4848";
+        int timeOut = 3000;
+        boolean reachable;
+        //long[] time = new long[5];
+        double timeSum = 0;
         String str = "";
-        try {
+        for (int i=0; i<5; i++){
+            try {
+                long BeforeTime = System.currentTimeMillis();
+                reachable = InetAddress.getByName(host).isReachable(timeOut);
+                long AfterTime = System.currentTimeMillis();
+                Long TimeDifference = AfterTime - BeforeTime;
+                //time[i] = TimeDifference;
+                timeSum = timeSum + TimeDifference;
+            } catch (IOException e) {
+                str = (e.toString());
+            }
+        }
+        /*try {
             addr = InetAddress.getByName(serverUrl);
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -50,16 +68,17 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         } catch (IOException e) {
             str = (e.toString());
 
-        }
+        }*/
         //Тут желательно получить какие-нибудь данные от сервера
-        return str;
+        timeSum = timeSum/5;
+        return timeSum;
     }
 
     NetworkData runSpeedTest() {
         long BeforeTime = System.currentTimeMillis();   //Замер до сетевой активности
         long TotalRxBeforeTest = TrafficStats.getTotalTxBytes();
         long TotalTxBeforeTest = TrafficStats.getTotalRxBytes();
-        getAddress();
+        getPingTime();
         long TotalRxAfterTest = TrafficStats.getTotalTxBytes(); //Замер после
         long TotalTxAfterTest = TrafficStats.getTotalRxBytes();
         long AfterTime = System.currentTimeMillis();
