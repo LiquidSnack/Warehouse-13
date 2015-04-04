@@ -1,10 +1,7 @@
 package com.mag.boikov.testapp;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -13,24 +10,20 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.app.Activity;
-import android.content.Context;
-import org.json.JSONObject;
 
+import com.mag.boikov.testapp.communications.GsmData;
+import com.mag.boikov.testapp.communications.Statistics;
 import com.mag.boikov.testapp.communications.StatisticsSender;
 import com.mag.boikov.testapp.network_info.MyLocationListener;
 import com.mag.boikov.testapp.network_info.NetFunctions;
 import com.mag.boikov.testapp.network_info.PhoneInfo;
 
-import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 
-import java.io.InputStream;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-
+import java.util.Date;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -60,6 +53,7 @@ public class MainActivity extends ActionBarActivity {
         outputBox = (TextView) findViewById(R.id.outputBox);
         outputBox.setMovementMethod(new ScrollingMovementMethod());
         phoneInfo = PhoneInfo.fromContext(getApplicationContext());
+        phoneInfo.setTestPerformedAt(new Date());
         Button startTestButton = (Button) findViewById(R.id.StartTest);
         startTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,24 +81,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-    }
-
-    public static String POST (String url, Data data){
-        InputStream inputStream = null;
-        String result = "";
-        try {
-            String json = "";
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.accumulate("operator name", phoneInfo.getOperatorName());
-            jsonObject.accumulate("network country", phoneInfo.getNetworkCountry());
-            jsonObject.accumulate("network operator", phoneInfo.getNetworkOperator());
-            jsonObject.accumulate("Date/Time", phoneInfo.TimeDate());
-            jsonObject.accumulate("Platums", locationListener.getLatitude());
-            jsonObject.accumulate("Garums", locationListener.getLongitude());
-        } catch (Exception e) {
-            Log.d("InputStream", e.getLocalizedMessage());
-        }
-        return result;
+        locationListener = new MyLocationListener(getApplicationContext());
     }
 
     @Override
@@ -138,7 +115,7 @@ public class MainActivity extends ActionBarActivity {
                                                            .entrySet()) {
             outputBox.append('\n' + cellInfo.getKey() + ": " + cellInfo.getValue());
         }
-        outputBox.append('\n' + "Datums:" + phoneInfo.TimeDate());
+        outputBox.append('\n' + String.format("Datums: %Tc", phoneInfo.getTestPerformedAt()));
         //outputBox.append('\n' + "Ping:" + netFunctions.ping());
         outputBox.append('\n' + "GPS koordinates: Platums =" + locationListener.getLatitude());
         outputBox.append('\n' + "Garums=" + locationListener.getLongitude());
@@ -146,12 +123,30 @@ public class MainActivity extends ActionBarActivity {
     }
 
     void sendData() {
+        Statistics statistics = buildStatistics();
         try {
-            outputBox.setText(new StatisticsSender().execute()
-                    .get());
-            } catch (Exception e) {
-            // log exception
-                    }
+            HttpStatus httpStatus = new StatisticsSender().execute(statistics)
+                                                          .get(3, TimeUnit.SECONDS);
+            if (httpStatus != HttpStatus.OK) {
+                Log.e("MainActivity", "Got response status " + httpStatus);
+            }
+        } catch (Exception e) {
+            Log.e("MainActivity", e.toString());
+        }
+    }
 
+    Statistics buildStatistics() {
+        Statistics statistics = new Statistics();
+        statistics.setGsmData(gsmData());
+        statistics.setTestPerformedAt(phoneInfo.getTestPerformedAt());
+        return statistics;
+    }
+
+    GsmData gsmData() {
+        GsmData gsmData = new GsmData();
+        gsmData.setNetworkCountry(phoneInfo.getNetworkCountry());
+        gsmData.setNetworkOperator(phoneInfo.getNetworkOperator());
+        gsmData.setOperatorName(phoneInfo.getOperatorName());
+        return gsmData;
     }
 }

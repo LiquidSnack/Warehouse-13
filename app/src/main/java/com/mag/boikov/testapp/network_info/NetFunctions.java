@@ -6,18 +6,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.os.AsyncTask;
-import java.util.Map;
-
-import com.mag.boikov.testapp.MainActivity;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-/**
- * Created by Boikov on 2015.03.26..
- */
-public class NetFunctions extends AsyncTask<Void, Void, String> {
+public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
 
     static final String serverUrl = "http://52.11.170.103:4848";
 
@@ -27,40 +21,18 @@ public class NetFunctions extends AsyncTask<Void, Void, String> {
         this.mContext = mContext;
     }
 
-    public boolean isConnected() { //Есть связь или нет
-        ConnectivityManager connMgr = (ConnectivityManager) mContext.getSystemService(Activity.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
+    @Override
+    protected NetworkData doInBackground(Void... params) {
+        NetworkData networkData = runSpeedTest();
+        networkData.setPing(calculatePing());
+        return networkData;
     }
 
-    /*public String ping() {
-        InetAddress addr = null;
-        String host = "194.105.56.170";
-        String str = "";
-        try {
-            addr = InetAddress.getByName(serverUrl);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (addr.isReachable(5000)) {
-                str = (host + " -Respond OK");
-            } else {
-                str = (host);
-            }
-        } catch (IOException e) {
-            str = (e.toString());
+    Double calculatePing() {
+        return null;
+    }
 
-        }
-        return str;
-    *///}
-
-    long BeforeTime = System.currentTimeMillis();   //Замер до сетевой активности
-    long TotalRxBeforeTest = TrafficStats.getTotalTxBytes();
-    long TotalTxBeforeTest = TrafficStats.getTotalRxBytes();
-
-    @Override
-    protected String doInBackground(Void... params) {
+    String getAddress() {
         InetAddress addr = null;
         String host = "194.105.56.170";
         String str = "";
@@ -83,31 +55,31 @@ public class NetFunctions extends AsyncTask<Void, Void, String> {
         return str;
     }
 
-    long TotalRxAfterTest = TrafficStats.getTotalTxBytes(); //Замер после
-    long TotalTxAfterTest = TrafficStats.getTotalRxBytes();
-    long AfterTime = System.currentTimeMillis();
+    NetworkData runSpeedTest() {
+        long BeforeTime = System.currentTimeMillis();   //Замер до сетевой активности
+        long TotalRxBeforeTest = TrafficStats.getTotalTxBytes();
+        long TotalTxBeforeTest = TrafficStats.getTotalRxBytes();
+        getAddress();
+        long TotalRxAfterTest = TrafficStats.getTotalTxBytes(); //Замер после
+        long TotalTxAfterTest = TrafficStats.getTotalRxBytes();
+        long AfterTime = System.currentTimeMillis();
 
-    double TimeDifference = AfterTime - BeforeTime;
+        double timeDifference = AfterTime - BeforeTime;
 
-    double rxDiff = TotalRxAfterTest - TotalRxBeforeTest;
-    double txDiff = TotalTxAfterTest - TotalTxBeforeTest;
-
-    public Map<String,String> netSpeed() {  // Как правильно возвращать 2 величины сразу?
-        Map<String,String> speed = netSpeed();
-        String downSpeed ="";
-        String upSpeed = "";
+        double rxDiff = TotalRxAfterTest - TotalRxBeforeTest;
+        double txDiff = TotalTxAfterTest - TotalTxBeforeTest;
         if ((rxDiff != 0) && (txDiff != 0)) {
-            double rxBPS = (rxDiff / (TimeDifference / 1000)); // total rx bytes per second.
-            double txBPS = (txDiff / (TimeDifference / 1000)); // total tx bytes per second.
-            downSpeed = String.valueOf(rxBPS) + "bps. Total rx = " + rxDiff;
-            upSpeed = String.valueOf(txBPS) + "bps. Total tx = " + txDiff;
-        } else {
-            downSpeed = "No downloaded bytes.";
-            upSpeed = "No uploaded bytes";
+            double rxBPS = (rxDiff / (timeDifference / 1000)); // total rx bytes per second.
+            double txBPS = (txDiff / (timeDifference / 1000)); // total tx bytes per second.
+            return asNetworkData(rxBPS, txBPS);
         }
-        return speed;
+        return new NetworkData();
     }
 
-
-
+    private NetworkData asNetworkData(double rxBPS, double txBPS) {
+        NetworkData networkData = new NetworkData();
+        networkData.setUploadSpeed(rxBPS);
+        networkData.setDownloadSpeed(txBPS);
+        return networkData;
+    }
 }
