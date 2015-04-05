@@ -34,7 +34,7 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         return ping;
     }
 
-    double getPingTime() {
+    public double getPingTime() {
         InetAddress addr = null;
         String host = "52.11.170.103:4848";
         int timeOut = 3000;
@@ -70,7 +70,7 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
 
         }*/
         //Тут желательно получить какие-нибудь данные от сервера
-        timeSum = timeSum/5;
+        timeSum = timeSum/5000;
         return timeSum;
     }
 

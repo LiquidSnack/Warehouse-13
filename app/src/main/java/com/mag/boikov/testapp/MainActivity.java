@@ -119,6 +119,7 @@ public class MainActivity extends ActionBarActivity {
         //outputBox.append('\n' + "Ping:" + netFunctions.ping());
         outputBox.append('\n' + "GPS koordinates: Platums =" + locationListener.getLatitude());
         outputBox.append('\n' + "Garums=" + locationListener.getLongitude());
+        //outputBox.append('\n' + "Ping= " + netFunctions.getPingTime() + "s");
         //Если isConnected в NetFunctions даёт false, вывести предупреждение
     }
 
@@ -147,6 +148,7 @@ public class MainActivity extends ActionBarActivity {
         gsmData.setNetworkCountry(phoneInfo.getNetworkCountry());
         gsmData.setNetworkOperator(phoneInfo.getNetworkOperator());
         gsmData.setOperatorName(phoneInfo.getOperatorName());
+        gsmData.setCellInfo(phoneInfo.getAllCellInfo());
         return gsmData;
     }
 }

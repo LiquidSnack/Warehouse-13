@@ -1,11 +1,15 @@
 package com.mag.boikov.testapp.communications;
 
+import java.util.Map;
+
 public class GsmData {
     String operatorName;
 
     String networkOperator;
 
     String networkCountry;
+
+    Map<String, String> cellInfo;
 
     public String getOperatorName() {
         return operatorName;
@@ -30,4 +34,13 @@ public class GsmData {
     public void setNetworkCountry(String networkCountry) {
         this.networkCountry = networkCountry;
     }
+
+    public Map<String, String> getCellInfo() {
+        return cellInfo;
+    }
+
+    public void setCellInfo(Map<String,String> cellInfo) {
+        this.cellInfo = cellInfo;
+    }
+
 }
