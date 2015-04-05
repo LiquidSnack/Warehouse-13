@@ -32,7 +32,6 @@ import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends ActionBarActivity {
-
     TextView outputBox;
     PhoneInfo phoneInfo;
     NetFunctions netFunctions;

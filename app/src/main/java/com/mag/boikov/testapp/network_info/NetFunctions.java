@@ -40,10 +40,11 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         //long[] time = new long[5];
         double timeSum = 0;
         String str = "";
-        for (int i=0; i<5; i++){
+        for (int i = 0; i < 5; i++) {
             try {
                 long BeforeTime = System.currentTimeMillis();
-                reachable = InetAddress.getByName(host).isReachable(timeOut);
+                reachable = InetAddress.getByName(host)
+                                       .isReachable(timeOut);
                 long AfterTime = System.currentTimeMillis();
                 Long TimeDifference = AfterTime - BeforeTime;
                 //time[i] = TimeDifference;
@@ -68,7 +69,7 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
 
         }*/
         //Тут желательно получить какие-нибудь данные от сервера
-        timeSum = timeSum/5000;
+        timeSum = timeSum / 5000;
         return timeSum;
     }
 

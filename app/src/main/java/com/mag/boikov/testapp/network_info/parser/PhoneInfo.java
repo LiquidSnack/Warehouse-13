@@ -10,13 +10,10 @@ import com.mag.boikov.testapp.network_info.PhoneCellInfo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 public class PhoneInfo {
     TelephonyManager telephonyManager;
-
-    Date testPerformedAt;
 
     public static PhoneInfo fromContext(Context context) {
         PhoneInfo phoneInfo = new PhoneInfo();
@@ -86,13 +83,5 @@ public class PhoneInfo {
             return Collections.emptyList();
         }
         return Arrays.asList(CellLocationParser.parse(cellLocation));
-    }
-
-    public TelephonyManager getTelephonyManager() {
-        return telephonyManager;
-    }
-
-    public void setTelephonyManager(TelephonyManager telephonyManager) {
-        this.telephonyManager = telephonyManager;
     }
 }

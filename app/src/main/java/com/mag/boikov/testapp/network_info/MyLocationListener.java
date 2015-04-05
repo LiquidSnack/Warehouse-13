@@ -61,7 +61,7 @@ public class MyLocationListener extends AsyncTask<Void, Void, GpsData> implement
                         if (location != null) {
                             latitude = location.getLatitude();
                             longitude = location.getLongitude();
-                            return asGpsData(latitude,longitude);
+                            return asGpsData(latitude, longitude);
                         }
                     }
                 }
@@ -75,7 +75,7 @@ public class MyLocationListener extends AsyncTask<Void, Void, GpsData> implement
                             if (location != null) {
                                 latitude = location.getLatitude();
                                 longitude = location.getLongitude();
-                                return asGpsData(latitude,longitude);
+                                return asGpsData(latitude, longitude);
                             }
                         }
                     }
