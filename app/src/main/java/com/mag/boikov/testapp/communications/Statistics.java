@@ -1,9 +1,10 @@
 package com.mag.boikov.testapp.communications;
 
-import com.mag.boikov.testapp.network_info.GpsData;
-import com.mag.boikov.testapp.network_info.NetworkData;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.mag.boikov.testapp.network_info.PhoneCellInfo;
 
 import java.util.Date;
+import java.util.Map;
 
 public class Statistics {
     GsmData gsmData;
@@ -13,6 +14,9 @@ public class Statistics {
     NetworkData networkData;
 
     GpsData gpsData;
+
+    @JsonProperty("cellInfo")
+    Map<String, PhoneCellInfo> cellInfoByType;
 
     public GsmData getGsmData() {
         return gsmData;
@@ -44,5 +48,13 @@ public class Statistics {
 
     public void setGpsData(GpsData gpsData) {
         this.gpsData = gpsData;
+    }
+
+    public Map<String, PhoneCellInfo> getCellInfoByType() {
+        return cellInfoByType;
+    }
+
+    public void setCellInfoByType(Map<String, PhoneCellInfo> cellInfoByType) {
+        this.cellInfoByType = cellInfoByType;
     }
 }

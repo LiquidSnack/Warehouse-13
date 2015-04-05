@@ -57,8 +57,136 @@ public class CdmaInfo implements PhoneCellInfo {
     }
 
     @Override
-    public String name() {
+    public String getCellType() {
         return "Network type - CDMA";
+    }
+
+    public int getNetworkId() {
+        return networkId;
+    }
+
+    public void setNetworkId(int networkId) {
+        this.networkId = networkId;
+    }
+
+    public int getBaseId() {
+        return baseId;
+    }
+
+    public void setBaseId(int baseId) {
+        this.baseId = baseId;
+    }
+
+    public int getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(int latitude) {
+        this.latitude = latitude;
+    }
+
+    public int getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(int longitude) {
+        this.longitude = longitude;
+    }
+
+    public int getNetId() {
+        return netId;
+    }
+
+    public void setNetId(int netId) {
+        this.netId = netId;
+    }
+
+    public int getSysId() {
+        return sysId;
+    }
+
+    public void setSysId(int sysId) {
+        this.sysId = sysId;
+    }
+
+    public int getAsuLevel() {
+        return asuLevel;
+    }
+
+    public void setAsuLevel(int asuLevel) {
+        this.asuLevel = asuLevel;
+    }
+
+    public int getCdmaDbm() {
+        return cdmaDbm;
+    }
+
+    public void setCdmaDbm(int cdmaDbm) {
+        this.cdmaDbm = cdmaDbm;
+    }
+
+    public int getCdmaEcio() {
+        return cdmaEcio;
+    }
+
+    public void setCdmaEcio(int cdmaEcio) {
+        this.cdmaEcio = cdmaEcio;
+    }
+
+    public int getCdmaLevel() {
+        return cdmaLevel;
+    }
+
+    public void setCdmaLevel(int cdmaLevel) {
+        this.cdmaLevel = cdmaLevel;
+    }
+
+    public int getDbm() {
+        return dbm;
+    }
+
+    public void setDbm(int dbm) {
+        this.dbm = dbm;
+    }
+
+    public int getEvdoDbm() {
+        return evdoDbm;
+    }
+
+    public void setEvdoDbm(int evdoDbm) {
+        this.evdoDbm = evdoDbm;
+    }
+
+    public int getEvdoEcio() {
+        return evdoEcio;
+    }
+
+    public void setEvdoEcio(int evdoEcio) {
+        this.evdoEcio = evdoEcio;
+    }
+
+    public int getEvdoLevel() {
+        return evdoLevel;
+    }
+
+    public void setEvdoLevel(int evdoLevel) {
+        this.evdoLevel = evdoLevel;
+    }
+
+    public int getEvdoSnr() {
+        return evdoSnr;
+    }
+
+    public void setEvdoSnr(int evdoSnr) {
+        this.evdoSnr = evdoSnr;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
     @Override

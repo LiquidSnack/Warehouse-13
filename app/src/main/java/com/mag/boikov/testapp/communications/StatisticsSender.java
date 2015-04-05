@@ -1,6 +1,7 @@
 package com.mag.boikov.testapp.communications;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -28,11 +29,16 @@ public class StatisticsSender extends AsyncTask<Statistics, Void, HttpStatus> {
 
     @Override
     protected HttpStatus doInBackground(Statistics... params) {
-        return sendStatistics(params[0]);
+        try {
+            return sendStatistics(params[0]);
+        } catch (Exception e) {
+            Log.e("StatisticsSender", e.toString());
+            return HttpStatus.I_AM_A_TEAPOT;
+        }
     }
 
     HttpStatus sendStatistics(Statistics statistics) {
-        return restTemplate.postForEntity(serverUrl, statistics, Statistics.class)
+        return restTemplate.postForEntity(serverUrl, statistics, Void.class)
                            .getStatusCode();
     }
 }

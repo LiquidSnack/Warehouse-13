@@ -7,11 +7,11 @@ import android.telephony.TelephonyManager;
 
 import com.mag.boikov.testapp.network_info.PhoneCellInfo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class PhoneInfo {
     TelephonyManager telephonyManager;
@@ -64,7 +64,7 @@ public class PhoneInfo {
         }
     }
 
-    public Map<String, String> getAllCellInfo() {
+    public List<PhoneCellInfo> getAllCellInfo() {
         List<CellInfo> infos = telephonyManager.getAllCellInfo();
         if (infos == null) {
             return parseCellLocation();
@@ -72,24 +72,20 @@ public class PhoneInfo {
         return parseCellInfo(infos);
     }
 
-    private Map<String, String> parseCellInfo(List<CellInfo> infos) {
-        Map<String, String> cellInfoByCellType = new HashMap<>(infos.size());
+    List<PhoneCellInfo> parseCellInfo(List<CellInfo> infos) {
+        List<PhoneCellInfo> phoneCellInfos = new ArrayList<>(infos.size());
         for (CellInfo info : infos) {
-            PhoneCellInfo phoneCellInfo = CellInfoParser.parse(info);
-            cellInfoByCellType.put(phoneCellInfo.name(), phoneCellInfo.toString());
+            phoneCellInfos.add(CellInfoParser.parse(info));
         }
-        return cellInfoByCellType;
+        return phoneCellInfos;
     }
 
-    private Map<String, String> parseCellLocation() {
+    List<PhoneCellInfo> parseCellLocation() {
         CellLocation cellLocation = telephonyManager.getCellLocation();
         if (cellLocation == null) {
-            return Collections.emptyMap();
+            return Collections.emptyList();
         }
-        HashMap<String, String> cellLocationByType = new HashMap<>(1);
-        PhoneCellInfo phoneCellInfo = CellLocationParser.parse(cellLocation);
-        cellLocationByType.put(phoneCellInfo.name(), phoneCellInfo.toString());
-        return cellLocationByType;
+        return Arrays.asList(CellLocationParser.parse(cellLocation));
     }
 
     public TelephonyManager getTelephonyManager() {
@@ -98,13 +94,5 @@ public class PhoneInfo {
 
     public void setTelephonyManager(TelephonyManager telephonyManager) {
         this.telephonyManager = telephonyManager;
-    }
-
-    public Date getTestPerformedAt() {
-        return testPerformedAt;
-    }
-
-    public void setTestPerformedAt(Date testPerformedAt) {
-        this.testPerformedAt = testPerformedAt;
     }
 }

@@ -1,15 +1,13 @@
 package com.mag.boikov.testapp.network_info;
 
-import android.app.Activity;
 import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.os.AsyncTask;
 
+import com.mag.boikov.testapp.communications.NetworkData;
+
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
 

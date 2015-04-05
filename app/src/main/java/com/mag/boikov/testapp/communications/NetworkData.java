@@ -1,4 +1,4 @@
-package com.mag.boikov.testapp.network_info;
+package com.mag.boikov.testapp.communications;
 
 public class NetworkData {
     Double uploadSpeed;
