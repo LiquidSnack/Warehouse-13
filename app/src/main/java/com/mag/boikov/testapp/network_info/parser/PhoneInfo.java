@@ -1,10 +1,13 @@
-package com.mag.boikov.testapp.network_info;
+package com.mag.boikov.testapp.network_info.parser;
 
 import android.content.Context;
 import android.telephony.CellInfo;
+import android.telephony.CellLocation;
 import android.telephony.TelephonyManager;
 
-import java.text.DateFormat;
+import com.mag.boikov.testapp.network_info.PhoneCellInfo;
+
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -63,12 +66,30 @@ public class PhoneInfo {
 
     public Map<String, String> getAllCellInfo() {
         List<CellInfo> infos = telephonyManager.getAllCellInfo();
+        if (infos == null) {
+            return parseCellLocation();
+        }
+        return parseCellInfo(infos);
+    }
+
+    private Map<String, String> parseCellInfo(List<CellInfo> infos) {
         Map<String, String> cellInfoByCellType = new HashMap<>(infos.size());
         for (CellInfo info : infos) {
             PhoneCellInfo phoneCellInfo = CellInfoParser.parse(info);
             cellInfoByCellType.put(phoneCellInfo.name(), phoneCellInfo.toString());
         }
         return cellInfoByCellType;
+    }
+
+    private Map<String, String> parseCellLocation() {
+        CellLocation cellLocation = telephonyManager.getCellLocation();
+        if (cellLocation == null) {
+            return Collections.emptyMap();
+        }
+        HashMap<String, String> cellLocationByType = new HashMap<>(1);
+        PhoneCellInfo phoneCellInfo = CellLocationParser.parse(cellLocation);
+        cellLocationByType.put(phoneCellInfo.name(), phoneCellInfo.toString());
+        return cellLocationByType;
     }
 
     public TelephonyManager getTelephonyManager() {

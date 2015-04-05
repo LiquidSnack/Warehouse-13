@@ -3,6 +3,7 @@ package com.mag.boikov.testapp.network_info;
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellSignalStrengthGsm;
+import android.telephony.gsm.GsmCellLocation;
 
 public class GsmInfo implements PhoneCellInfo {
     int asuLevel;
@@ -22,6 +23,13 @@ public class GsmInfo implements PhoneCellInfo {
         gsmInfo.lac = cellIdentityGsm.getLac();
         gsmInfo.mcc = cellIdentityGsm.getMcc();
         gsmInfo.mnc = cellIdentityGsm.getMnc();
+        return gsmInfo;
+    }
+
+    public static PhoneCellInfo fromCellLocation(GsmCellLocation cellLocation) {
+        GsmInfo gsmInfo = new GsmInfo();
+        gsmInfo.cid = cellLocation.getCid();
+        gsmInfo.lac = cellLocation.getLac();
         return gsmInfo;
     }
 

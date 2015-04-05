@@ -3,7 +3,7 @@
     package="com.mag.boikov.testapp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-sdk android:minSdkVersion="18" android:targetSdkVersion="21"/>
+    <uses-sdk android:minSdkVersion="17" android:targetSdkVersion="21"/>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>

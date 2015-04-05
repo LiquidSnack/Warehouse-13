@@ -17,7 +17,7 @@ import com.mag.boikov.testapp.communications.Statistics;
 import com.mag.boikov.testapp.communications.StatisticsSender;
 import com.mag.boikov.testapp.network_info.MyLocationListener;
 import com.mag.boikov.testapp.network_info.NetFunctions;
-import com.mag.boikov.testapp.network_info.PhoneInfo;
+import com.mag.boikov.testapp.network_info.parser.PhoneInfo;
 
 import org.springframework.http.HttpStatus;
 
