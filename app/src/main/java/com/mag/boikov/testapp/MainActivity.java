@@ -1,7 +1,10 @@
 package com.mag.boikov.testapp;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -17,17 +20,18 @@ import com.mag.boikov.testapp.communications.Statistics;
 import com.mag.boikov.testapp.communications.StatisticsSender;
 import com.mag.boikov.testapp.network_info.MyLocationListener;
 import com.mag.boikov.testapp.network_info.NetFunctions;
-import com.mag.boikov.testapp.network_info.PhoneInfo;
+import com.mag.boikov.testapp.network_info.PhoneCellInfo;
+import com.mag.boikov.testapp.network_info.parser.PhoneInfo;
 
 import org.springframework.http.HttpStatus;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends ActionBarActivity {
-
     TextView outputBox;
     PhoneInfo phoneInfo;
     NetFunctions netFunctions;
@@ -53,7 +57,6 @@ public class MainActivity extends ActionBarActivity {
         outputBox = (TextView) findViewById(R.id.outputBox);
         outputBox.setMovementMethod(new ScrollingMovementMethod());
         phoneInfo = PhoneInfo.fromContext(getApplicationContext());
-        phoneInfo.setTestPerformedAt(new Date());
         Button startTestButton = (Button) findViewById(R.id.StartTest);
         startTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,6 +65,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
         Button sendButton = (Button) findViewById(R.id.Send);
+        sendButton.setEnabled(isNetworkConnectionAvailable());
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +86,12 @@ public class MainActivity extends ActionBarActivity {
         });
 
         locationListener = new MyLocationListener(getApplicationContext());
+    }
+
+    boolean isNetworkConnectionAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     @Override
@@ -111,11 +121,10 @@ public class MainActivity extends ActionBarActivity {
         outputBox.append("Operator: " + phoneInfo.getOperatorName());
         outputBox.append('\n' + "Network Country: " + phoneInfo.getNetworkCountry());
         outputBox.append('\n' + "Network Operator: " + phoneInfo.getNetworkOperator());
-        for (Map.Entry<String, String> cellInfo : phoneInfo.getAllCellInfo()
-                                                           .entrySet()) {
-            outputBox.append('\n' + cellInfo.getKey() + ": " + cellInfo.getValue());
+        for (PhoneCellInfo cellInfo : phoneInfo.getAllCellInfo()) {
+            outputBox.append('\n' + cellInfo.getCellType() + ": " + cellInfo);
         }
-        outputBox.append('\n' + String.format("Datums: %Tc", phoneInfo.getTestPerformedAt()));
+        outputBox.append('\n' + String.format("Datums: %Tc", new Date()));
         //outputBox.append('\n' + "Ping:" + netFunctions.ping());
         outputBox.append('\n' + "GPS koordinates: Platums =" + locationListener.getLatitude());
         outputBox.append('\n' + "Garums=" + locationListener.getLongitude());
@@ -139,8 +148,17 @@ public class MainActivity extends ActionBarActivity {
     Statistics buildStatistics() {
         Statistics statistics = new Statistics();
         statistics.setGsmData(gsmData());
-        statistics.setTestPerformedAt(phoneInfo.getTestPerformedAt());
+        statistics.setTestPerformedAt(new Date());
+        statistics.setCellInfoByType(cellInfoByType());
         return statistics;
+    }
+
+    Map<String, PhoneCellInfo> cellInfoByType() {
+        Map<String, PhoneCellInfo> cellInfo = new HashMap<>();
+        for (PhoneCellInfo info : phoneInfo.getAllCellInfo()) {
+            cellInfo.put(info.getCellType(), info);
+        }
+        return cellInfo;
     }
 
     GsmData gsmData() {
@@ -148,7 +166,6 @@ public class MainActivity extends ActionBarActivity {
         gsmData.setNetworkCountry(phoneInfo.getNetworkCountry());
         gsmData.setNetworkOperator(phoneInfo.getNetworkOperator());
         gsmData.setOperatorName(phoneInfo.getOperatorName());
-        gsmData.setCellInfo(phoneInfo.getAllCellInfo());
         return gsmData;
     }
 }

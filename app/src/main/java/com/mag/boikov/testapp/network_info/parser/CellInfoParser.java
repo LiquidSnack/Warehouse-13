@@ -1,10 +1,16 @@
-package com.mag.boikov.testapp.network_info;
+package com.mag.boikov.testapp.network_info.parser;
 
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
 import android.telephony.CellInfoWcdma;
+
+import com.mag.boikov.testapp.network_info.CdmaInfo;
+import com.mag.boikov.testapp.network_info.GsmInfo;
+import com.mag.boikov.testapp.network_info.LteInfo;
+import com.mag.boikov.testapp.network_info.PhoneCellInfo;
+import com.mag.boikov.testapp.network_info.WcdmaInfo;
 
 class CellInfoParser {
     public static PhoneCellInfo parse(CellInfo cellInfo) {
@@ -17,7 +23,8 @@ class CellInfoParser {
         } else if (cellInfo instanceof CellInfoWcdma) {
             return parseWcdmaInfo((CellInfoWcdma) cellInfo);
         }
-        throw new RuntimeException("Unknown CellInfo type: " + cellInfo.getClass());
+        throw new RuntimeException("Unknown CellInfo type: " + cellInfo.getClass()
+                                                                       .getCanonicalName());
     }
 
     static WcdmaInfo parseWcdmaInfo(CellInfoWcdma cellInfo) {

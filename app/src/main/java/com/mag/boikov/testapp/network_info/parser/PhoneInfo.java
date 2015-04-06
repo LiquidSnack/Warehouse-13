@@ -1,19 +1,19 @@
-package com.mag.boikov.testapp.network_info;
+package com.mag.boikov.testapp.network_info.parser;
 
 import android.content.Context;
 import android.telephony.CellInfo;
+import android.telephony.CellLocation;
 import android.telephony.TelephonyManager;
 
-import java.text.DateFormat;
-import java.util.Date;
-import java.util.HashMap;
+import com.mag.boikov.testapp.network_info.PhoneCellInfo;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public class PhoneInfo {
     TelephonyManager telephonyManager;
-
-    Date testPerformedAt;
 
     public static PhoneInfo fromContext(Context context) {
         PhoneInfo phoneInfo = new PhoneInfo();
@@ -61,29 +61,27 @@ public class PhoneInfo {
         }
     }
 
-    public Map<String, String> getAllCellInfo() {
+    public List<PhoneCellInfo> getAllCellInfo() {
         List<CellInfo> infos = telephonyManager.getAllCellInfo();
-        Map<String, String> cellInfoByCellType = new HashMap<>(infos.size());
-        for (CellInfo info : infos) {
-            PhoneCellInfo phoneCellInfo = CellInfoParser.parse(info);
-            cellInfoByCellType.put(phoneCellInfo.name(), phoneCellInfo.toString());
+        if (infos == null) {
+            return parseCellLocation();
         }
-        return cellInfoByCellType;
+        return parseCellInfo(infos);
     }
 
-    public TelephonyManager getTelephonyManager() {
-        return telephonyManager;
+    List<PhoneCellInfo> parseCellInfo(List<CellInfo> infos) {
+        List<PhoneCellInfo> phoneCellInfos = new ArrayList<>(infos.size());
+        for (CellInfo info : infos) {
+            phoneCellInfos.add(CellInfoParser.parse(info));
+        }
+        return phoneCellInfos;
     }
 
-    public void setTelephonyManager(TelephonyManager telephonyManager) {
-        this.telephonyManager = telephonyManager;
-    }
-
-    public Date getTestPerformedAt() {
-        return testPerformedAt;
-    }
-
-    public void setTestPerformedAt(Date testPerformedAt) {
-        this.testPerformedAt = testPerformedAt;
+    List<PhoneCellInfo> parseCellLocation() {
+        CellLocation cellLocation = telephonyManager.getCellLocation();
+        if (cellLocation == null) {
+            return Collections.emptyList();
+        }
+        return Arrays.asList(CellLocationParser.parse(cellLocation));
     }
 }
