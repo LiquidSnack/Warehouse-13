@@ -128,7 +128,7 @@ public class MainActivity extends ActionBarActivity {
         //outputBox.append('\n' + "Ping:" + netFunctions.ping());
         outputBox.append('\n' + "GPS koordinates: Platums =" + locationListener.getLatitude());
         outputBox.append('\n' + "Garums=" + locationListener.getLongitude());
-        //outputBox.append('\n' + "Ping= " + netFunctions.getPingTime() + "s");
+        outputBox.append('\n' + "Packet loss= " + netFunctions.getPacketLoss() + "%");
         //Если isConnected в NetFunctions даёт false, вывести предупреждение
     }
 

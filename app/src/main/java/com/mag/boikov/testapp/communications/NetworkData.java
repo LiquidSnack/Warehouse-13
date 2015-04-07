@@ -3,7 +3,7 @@ package com.mag.boikov.testapp.communications;
 public class NetworkData {
     Double uploadSpeed;
     Double downloadSpeed;
-    Double ping;
+    Integer packetLoss;
 
     public Double getUploadSpeed() {
         return uploadSpeed;
@@ -21,11 +21,11 @@ public class NetworkData {
         this.downloadSpeed = downloadSpeed;
     }
 
-    public Double getPing() {
-        return ping;
+    public Integer getPacketLoss() {
+        return packetLoss;
     }
 
-    public void setPing(Double ping) {
-        this.ping = ping;
+    public void setPacketLoss(Integer packetLoss) {
+        this.packetLoss = packetLoss;
     }
 }

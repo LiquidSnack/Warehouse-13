@@ -22,20 +22,20 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
     @Override
     protected NetworkData doInBackground(Void... params) {
         NetworkData networkData = runSpeedTest();
-        networkData.setPing(calculatePing());
+        networkData.setPacketLoss(calculatePacketLoss());
         return networkData;
     }
 
-    Double calculatePing() {
-        double ping = 0;
-        ping = ping + getPingTime();
-        return ping;
+    Integer calculatePacketLoss() {
+        int packetLoss = getPacketLoss();
+        return packetLoss;
     }
 
-    public double getPingTime() {
+    public int getPacketLoss() {
         InetAddress addr = null;
         String host = "52.11.170.103:4848";
         int timeOut = 3000;
+        int packetLoss =0;
         boolean reachable;
         //long[] time = new long[5];
         double timeSum = 0;
@@ -47,6 +47,9 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
                                        .isReachable(timeOut);
                 long AfterTime = System.currentTimeMillis();
                 Long TimeDifference = AfterTime - BeforeTime;
+                if (TimeDifference>timeOut) {
+                    packetLoss = packetLoss + 20;
+                }
                 //time[i] = TimeDifference;
                 timeSum = timeSum + TimeDifference;
             } catch (IOException e) {
@@ -69,15 +72,15 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
 
         }*/
         //Тут желательно получить какие-нибудь данные от сервера
-        timeSum = timeSum / 5000;
-        return timeSum;
+        //timeSum = timeSum / 5000;
+        return packetLoss;
     }
 
     NetworkData runSpeedTest() {
         long BeforeTime = System.currentTimeMillis();   //Замер до сетевой активности
         long TotalRxBeforeTest = TrafficStats.getTotalTxBytes();
         long TotalTxBeforeTest = TrafficStats.getTotalRxBytes();
-        getPingTime();
+        getPacketLoss();
         long TotalRxAfterTest = TrafficStats.getTotalTxBytes(); //Замер после
         long TotalTxAfterTest = TrafficStats.getTotalRxBytes();
         long AfterTime = System.currentTimeMillis();
