@@ -3,10 +3,10 @@ package com.mag.boikov.testapp.network_info;
 import android.content.Context;
 import android.net.TrafficStats;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.mag.boikov.testapp.communications.NetworkData;
 
-import java.io.IOException;
 import java.net.InetAddress;
 
 public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
@@ -32,47 +32,25 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
     }
 
     public int getPacketLoss() {
-        InetAddress addr = null;
-        String host = "52.11.170.103:4848";
+        byte[] ip = {52, 11, (byte) 170, 103};
         int timeOut = 3000;
-        int packetLoss =0;
-        boolean reachable;
-        //long[] time = new long[5];
+        int packetLoss = 0;
         double timeSum = 0;
-        String str = "";
         for (int i = 0; i < 5; i++) {
             try {
-                long BeforeTime = System.currentTimeMillis();
-                reachable = InetAddress.getByName(host)
-                                       .isReachable(timeOut);
-                long AfterTime = System.currentTimeMillis();
-                Long TimeDifference = AfterTime - BeforeTime;
-                if (TimeDifference>timeOut) {
-                    packetLoss = packetLoss + 20;
+                long beforeTime = System.currentTimeMillis();
+                InetAddress.getByAddress(null, ip)
+                           .isReachable(timeOut);
+                long afterTime = System.currentTimeMillis();
+                long timeDifference = afterTime - beforeTime;
+                if (timeDifference > timeOut) {
+                    packetLoss += 20;
                 }
-                //time[i] = TimeDifference;
-                timeSum = timeSum + TimeDifference;
-            } catch (IOException e) {
-                str = (e.toString());
+                timeSum = timeSum + timeDifference;
+            } catch (Exception e) {
+                Log.e("NetFunctions", e.toString());
             }
         }
-        /*try {
-            addr = InetAddress.getByName(serverUrl);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-        try {
-            if (addr.isReachable(5000)) {
-                str = (host + " -Respond OK");
-            } else {
-                str = (host);
-            }
-        } catch (IOException e) {
-            str = (e.toString());
-
-        }*/
-        //Тут желательно получить какие-нибудь данные от сервера
-        //timeSum = timeSum / 5000;
         return packetLoss;
     }
 
