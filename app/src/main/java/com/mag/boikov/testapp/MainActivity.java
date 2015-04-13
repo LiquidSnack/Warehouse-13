@@ -15,12 +15,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.googlecode.jpingy.PingResult;
 import com.mag.boikov.testapp.communications.GsmData;
 import com.mag.boikov.testapp.communications.Statistics;
 import com.mag.boikov.testapp.communications.StatisticsSender;
 import com.mag.boikov.testapp.network_info.MyLocationListener;
 import com.mag.boikov.testapp.network_info.NetFunctions;
 import com.mag.boikov.testapp.network_info.PhoneCellInfo;
+import com.mag.boikov.testapp.network_info.PingStats;
 import com.mag.boikov.testapp.network_info.parser.PhoneInfo;
 
 import org.springframework.http.HttpStatus;
@@ -29,7 +31,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-
 
 public class MainActivity extends ActionBarActivity {
     TextView outputBox;
@@ -73,7 +74,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        NetFunctions netFunctions = new NetFunctions(this);
+        netFunctions = new NetFunctions(this);
 
         AlertDialog alert = new AlertDialog.Builder(this).create(); //предупреждение
         alert.setTitle("Error");
@@ -128,8 +129,23 @@ public class MainActivity extends ActionBarActivity {
         //outputBox.append('\n' + "Ping:" + netFunctions.ping());
         outputBox.append('\n' + "GPS koordinates: Platums =" + locationListener.getLatitude());
         outputBox.append('\n' + "Garums=" + locationListener.getLongitude());
-        outputBox.append('\n' + "Packet loss= " + netFunctions.getPacketLoss() + "%");
-        //Если isConnected в NetFunctions даёт false, вывести предупреждение
+        if (isNetworkConnectionAvailable()) {
+            appendPacketLossInfo();
+        }
+    }
+
+    private void appendPacketLossInfo() {
+        try {
+            appendPacketLoss();
+        } catch (RuntimeException re) {
+            Log.e("MainActivity", re.toString());
+        }
+    }
+
+    void appendPacketLoss() {
+        PingResult pingResult = PingStats.get(20000);
+        double packetLoss = (1 - (double) pingResult.received() / pingResult.transmitted()) * 100;
+        outputBox.append('\n' + String.format("Packet loss %.0f", packetLoss) + "%");
     }
 
     void sendData() {
