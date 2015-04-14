@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.TrafficStats;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -129,9 +130,22 @@ public class MainActivity extends ActionBarActivity {
         //outputBox.append('\n' + "Ping:" + netFunctions.ping());
         outputBox.append('\n' + "GPS koordinates: Platums =" + locationListener.getLatitude());
         outputBox.append('\n' + "Garums=" + locationListener.getLongitude());
+        long BeforeTime = System.currentTimeMillis();   //Замер до сетевой активности
+        long TotalRxBeforeTest = TrafficStats.getTotalTxBytes();
+        long TotalTxBeforeTest = TrafficStats.getTotalRxBytes();
         if (isNetworkConnectionAvailable()) {
             appendPacketLossInfo();
         }
+        long TotalRxAfterTest = TrafficStats.getTotalTxBytes(); //Замер после
+        long TotalTxAfterTest = TrafficStats.getTotalRxBytes();
+        long AfterTime = System.currentTimeMillis();
+        double timeDifference = AfterTime - BeforeTime;
+
+        double rxDiff = TotalRxAfterTest - TotalRxBeforeTest;
+        double txDiff = TotalTxAfterTest - TotalTxBeforeTest;
+
+        outputBox.append('\n' + "Download speed: " + rxDiff / (timeDifference / 1000) + "bytes per second");
+        outputBox.append('\n' + "Upload speed: " + txDiff / (timeDifference / 1000) + "bytes per second");
     }
 
     private void appendPacketLossInfo() {
