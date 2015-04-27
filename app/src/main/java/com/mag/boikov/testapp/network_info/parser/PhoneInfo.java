@@ -3,8 +3,12 @@ package com.mag.boikov.testapp.network_info.parser;
 import android.content.Context;
 import android.telephony.CellInfo;
 import android.telephony.CellLocation;
+import android.telephony.PhoneStateListener;
+import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 
+import com.mag.boikov.testapp.network_info.CdmaInfo;
+import com.mag.boikov.testapp.network_info.GsmInfo;
 import com.mag.boikov.testapp.network_info.PhoneCellInfo;
 
 import java.util.ArrayList;
@@ -13,11 +17,27 @@ import java.util.Collections;
 import java.util.List;
 
 public class PhoneInfo {
+    class SignalStrengthStateListener extends PhoneStateListener {
+        @Override
+        public void onSignalStrengthsChanged(SignalStrength signalStrength) {
+            if (signalStrength.isGsm()) {
+                PhoneInfo.this.gsmSignalStrength = signalStrength.getGsmSignalStrength();
+            } else {
+                PhoneInfo.this.cdmaSignalStrength = signalStrength.getCdmaDbm();
+            }
+        }
+    }
+
     TelephonyManager telephonyManager;
+
+    int gsmSignalStrength;
+
+    int cdmaSignalStrength;
 
     public static PhoneInfo fromContext(Context context) {
         PhoneInfo phoneInfo = new PhoneInfo();
         phoneInfo.telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        phoneInfo.telephonyManager.listen(phoneInfo.new SignalStrengthStateListener(), PhoneStateListener.LISTEN_SIGNAL_STRENGTHS);
         return phoneInfo;
     }
 
@@ -82,6 +102,12 @@ public class PhoneInfo {
         if (cellLocation == null) {
             return Collections.emptyList();
         }
-        return Arrays.asList(CellLocationParser.parse(cellLocation));
+        final PhoneCellInfo phoneCellInfo = CellLocationParser.parse(cellLocation);
+        if (phoneCellInfo instanceof GsmInfo) {
+            ((GsmInfo) phoneCellInfo).setDbm(gsmSignalStrength);
+        } else {
+            ((CdmaInfo) phoneCellInfo).setDbm(cdmaSignalStrength);
+        }
+        return Arrays.asList(phoneCellInfo);
     }
 }

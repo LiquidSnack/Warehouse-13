@@ -8,10 +8,6 @@ import android.net.NetworkInfo;
 import android.net.TrafficStats;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.telephony.CellLocation;
-import android.telephony.CellSignalStrength;
-import android.telephony.TelephonyManager;
-import android.telephony.gsm.GsmCellLocation;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.Menu;
@@ -42,9 +38,6 @@ public class MainActivity extends ActionBarActivity {
     PhoneInfo phoneInfo;
     NetFunctions netFunctions;
     MyLocationListener locationListener;
-    CellSignalStrength cellSignalStrength;
-
-    GsmCellLocation cellLocation;
 
     public class Data {
         private String operatorName;
@@ -130,16 +123,14 @@ public class MainActivity extends ActionBarActivity {
         outputBox.append("Operator: " + phoneInfo.getOperatorName());
         outputBox.append('\n' + "Network Country: " + phoneInfo.getNetworkCountry());
         outputBox.append('\n' + "Network Operator code: " + phoneInfo.getNetworkOperator());
-        outputBox.append('\n' + "Signal strength: " + cellSignalStrength.getDbm() + " dBm");
-        outputBox.append('\n' + "asu level: " + cellSignalStrength.getAsuLevel());
-        outputBox.append('\n' + "Cell location: " + cellLocation.toString());
-        outputBox.append('\n' + "CID: " + String.valueOf(cellLocation.getCid()));
-        outputBox.append('\n' + "LAC: " + String.valueOf(cellLocation.getLac()));
-        /*
+        //        outputBox.append('\n' + "Signal strength: " + cellSignalStrength.getDbm() + " dBm");
+        //        outputBox.append('\n' + "asu level: " + cellSignalStrength.getAsuLevel());
+        //        outputBox.append('\n' + "Cell location: " + cellLocation.toString());
+        //        outputBox.append('\n' + "CID: " + String.valueOf(cellLocation.getCid()));
+        //        outputBox.append('\n' + "LAC: " + String.valueOf(cellLocation.getLac()));
         for (PhoneCellInfo cellInfo : phoneInfo.getAllCellInfo()) {
             outputBox.append('\n' + cellInfo.getCellType() + ": " + cellInfo);
         }
-        */
         outputBox.append('\n' + String.format("Datums: %Tc", new Date()));
         //outputBox.append('\n' + "Ping:" + netFunctions.ping());
         outputBox.append('\n' + "GPS koordinates: Platums =" + locationListener.getLatitude());
