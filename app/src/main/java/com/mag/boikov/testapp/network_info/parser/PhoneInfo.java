@@ -5,7 +5,9 @@ import android.telephony.CellInfo;
 import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
+import android.telephony.CellSignalStrength;
 import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
 
 import com.mag.boikov.testapp.network_info.CdmaInfo;
 import com.mag.boikov.testapp.network_info.GsmInfo;
@@ -28,11 +30,32 @@ public class PhoneInfo {
         }
     }
 
+    class CellAsuListener extends CellSignalStrength {
+
+        public void getAsuLevel(CellSignalStrength cellSignalStrength) {
+            PhoneInfo.this.gsmAsuLevel = cellSignalStrength.getAsuLevel();
+        }
+    }
+
+    class CellLocation extends GsmCellLocation {
+
+        public void onCellLocationChanged(GsmCellLocation gsmCellLocation) {
+            PhoneInfo.this.gsmCid = gsmCellLocation.getCid();
+            PhoneInfo.this.gsmLac = gsmCellLocation.getLac();
+        }
+    }
+
     TelephonyManager telephonyManager;
 
     int gsmSignalStrength;
 
     int cdmaSignalStrength;
+
+    int gsmAsuLevel;
+
+    int gsmCid;
+
+    int gsmLac;
 
     public static PhoneInfo fromContext(Context context) {
         PhoneInfo phoneInfo = new PhoneInfo();
@@ -105,6 +128,9 @@ public class PhoneInfo {
         final PhoneCellInfo phoneCellInfo = CellLocationParser.parse(cellLocation);
         if (phoneCellInfo instanceof GsmInfo) {
             ((GsmInfo) phoneCellInfo).setDbm(gsmSignalStrength);
+            ((GsmInfo) phoneCellInfo).setAsuLevel(gsmAsuLevel);
+            ((GsmInfo) phoneCellInfo).setCid(gsmCid);
+            ((GsmInfo) phoneCellInfo).setLac(gsmLac);
         } else {
             ((CdmaInfo) phoneCellInfo).setDbm(cdmaSignalStrength);
         }

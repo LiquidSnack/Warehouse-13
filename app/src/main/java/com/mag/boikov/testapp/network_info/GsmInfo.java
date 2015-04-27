@@ -69,7 +69,7 @@ public class GsmInfo implements PhoneCellInfo {
     public void setLac(int lac) {
         this.lac = lac;
     }
-
+/*
     public int getMcc() {
         return mcc;
     }
@@ -85,7 +85,7 @@ public class GsmInfo implements PhoneCellInfo {
     public void setMnc(int mnc) {
         this.mnc = mnc;
     }
-
+*/
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("Cell Info{");
@@ -97,10 +97,10 @@ public class GsmInfo implements PhoneCellInfo {
           .append(cid);
         sb.append("," + '\n' + " lac=")
           .append(lac);
-        sb.append("," + '\n' + " mcc=")
-          .append(mcc);
-        sb.append("," + '\n' + " mnc=")
-          .append(mnc);
+        //sb.append("," + '\n' + " mcc=")
+        //  .append(mcc);
+       // sb.append("," + '\n' + " mnc=")
+        //  .append(mnc);
         sb.append('}');
         return sb.toString();
     }
