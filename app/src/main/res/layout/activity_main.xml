@@ -20,7 +20,7 @@
         android:layout_below="@+id/StartTest"
         android:layout_alignParentStart="true"
         android:nestedScrollingEnabled="false"
-        android:maxLines="10"
+        android:maxLines="16"
         android:scrollbars="vertical"/>
 
     <Button

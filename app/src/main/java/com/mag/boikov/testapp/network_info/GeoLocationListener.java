@@ -15,7 +15,7 @@ import android.util.Log;
 
 import com.mag.boikov.testapp.communications.GpsData;
 
-public class MyLocationListener extends AsyncTask<Void, Void, GpsData> implements LocationListener {
+public class GeoLocationListener extends AsyncTask<Void, Void, GpsData> implements LocationListener {
 
     public double latitude;
     public double longitude;
@@ -41,7 +41,7 @@ public class MyLocationListener extends AsyncTask<Void, Void, GpsData> implement
         return gpsData;
     }
 
-    public MyLocationListener(Context context) {
+    public GeoLocationListener(Context context) {
         this.mContext = context;
         getLocation();
     }
@@ -92,21 +92,6 @@ public class MyLocationListener extends AsyncTask<Void, Void, GpsData> implement
 
     }
 
-    /* public MyLocationListener(Context mContext) {
-             this.mContext = mContext;
-         }
-
-         LocationManager locationManager = (LocationManager) mContext.getSystemService(Activity.LOCATION_SERVICE);
-         LocationListener locationListener = new MyLocationListener();
-         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-
-         public void onLocationChanged(Location loc)
-         {
-             latitude=loc.getLatitude();
-             longitude=loc.getLongitude();
-
-         }
-     */
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
 
