@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.TrafficStats;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.method.ScrollingMovementMethod;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 
 import com.googlecode.jpingy.PingResult;
 import com.mag.boikov.testapp.communications.GsmData;
+import com.mag.boikov.testapp.communications.NetworkData;
 import com.mag.boikov.testapp.communications.Statistics;
 import com.mag.boikov.testapp.communications.StatisticsSender;
 import com.mag.boikov.testapp.network_info.GeoLocationListener;
@@ -120,22 +120,20 @@ public class MainActivity extends ActionBarActivity {
         outputBox.append('\n' + String.format("Datums: %Tc", new Date()));
         outputBox.append('\n' + "GPS koordinates: Platums =" + locationListener.getLatitude());
         outputBox.append('\n' + "Garums=" + locationListener.getLongitude());
-        long BeforeTime = System.currentTimeMillis();
-        long TotalRxBeforeTest = TrafficStats.getTotalTxBytes();
-        long TotalTxBeforeTest = TrafficStats.getTotalRxBytes();
-        if (isNetworkConnectionAvailable()) {
-            appendPacketLossInfo();
+        NetworkData networkData = getNetworkData();
+        outputBox.append(String.format("\nDownload speed: %.3f KB/s", networkData.getDownloadSpeed()));
+        outputBox.append(String.format("\nUploadload speed: %.3f KB/s", networkData.getUploadSpeed()));
+    }
+
+    NetworkData getNetworkData() {
+        NetworkData networkData;
+        try {
+            networkData = new NetFunctions(getApplicationContext()).execute()
+                                                                   .get();
+        } catch (Exception e) {
+            networkData = new NetworkData();
         }
-        long TotalRxAfterTest = TrafficStats.getTotalTxBytes();
-        long TotalTxAfterTest = TrafficStats.getTotalRxBytes();
-        long AfterTime = System.currentTimeMillis();
-        double timeDifference = AfterTime - BeforeTime;
-
-        double rxDiff = TotalRxAfterTest - TotalRxBeforeTest;
-        double txDiff = TotalTxAfterTest - TotalTxBeforeTest;
-
-        outputBox.append('\n' + "Download speed: " + rxDiff / (timeDifference / 1000) + "bytes per second");
-        outputBox.append('\n' + "Upload speed: " + txDiff / (timeDifference / 1000) + "bytes per second");
+        return networkData;
     }
 
     private void appendPacketLossInfo() {
