@@ -5,11 +5,14 @@ import android.net.TrafficStats;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.googlecode.jpingy.Ping;
+import com.googlecode.jpingy.PingArguments;
+import com.googlecode.jpingy.PingResult;
 import com.mag.boikov.testapp.communications.NetworkData;
 
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.InetAddress;
 import java.util.Arrays;
 
 public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
@@ -20,10 +23,17 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
 
     final Context mContext;
 
-    RestTemplate template = new RestTemplate();
+    RestTemplate template = buildTemplate();
 
     public NetFunctions(Context mContext) {
         this.mContext = mContext;
+    }
+
+    RestTemplate buildTemplate() {
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        factory.setConnectTimeout(TIME_OUT_MS);
+        factory.setReadTimeout(TIME_OUT_MS);
+        return new RestTemplate(factory);
     }
 
     @Override
@@ -43,64 +53,53 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
     }
 
     Integer calculatePacketLoss() {
-        int packetLoss = getPacketLoss();
-        return packetLoss;
+        PingResult pingResult = pingResult();
+        double loss = (1 - (double) pingResult.received() / pingResult.transmitted()) * 100;
+        return (int) Math.round(loss);
     }
 
-    public int getPacketLoss() {
-        byte[] ip = {52, 11, (byte) 170, 103};
-        int timeOut = 3000;
-        int packetLoss = 0;
-        double timeSum = 0;
-        for (int i = 0; i < 5; i++) {
-            try {
-                long beforeTime = System.currentTimeMillis();
-                InetAddress.getByAddress(null, ip)
-                           .isReachable(timeOut);
-                long afterTime = System.currentTimeMillis();
-                long timeDifference = afterTime - beforeTime;
-                if (timeDifference > timeOut) {
-                    packetLoss += 20;
-                }
-                timeSum = timeSum + timeDifference;
-            } catch (Exception e) {
-                Log.e("NetFunctions", e.toString());
-            }
-        }
-        return packetLoss;
+    PingResult pingResult() {
+        PingArguments args = new PingArguments.Builder().url("52.11.170.103")
+                                                        .count(5)
+                                                        .bytes(32)
+                                                        .build();
+        return Ping.ping(args, Ping.Backend.UNIX);
     }
 
     NetworkData runSpeedTest() {
         byte[] testData = randomBytes();
-        long totalRxBeforeTest = TrafficStats.getTotalRxBytes();
-        long totalTxBeforeTest = TrafficStats.getTotalTxBytes();
-        long BeforeTime = System.currentTimeMillis();   //Замер до сетевой активности
-        sendBytes(testData);
-        double timeDifference = System.currentTimeMillis() - BeforeTime;
-
-        double txDiff = TrafficStats.getTotalTxBytes() - totalTxBeforeTest;
-        double rxDiff = TrafficStats.getTotalRxBytes() - totalRxBeforeTest;
+        long totalRxBefore = TrafficStats.getTotalRxBytes();
+        long totalTxBefore = TrafficStats.getTotalTxBytes();
+        long beforeTime = System.currentTimeMillis();
+        byte[] response = sendAndReceive(testData);
+        double timeDifference = System.currentTimeMillis() - beforeTime;
+        double txDiff = TrafficStats.getTotalTxBytes() - totalTxBefore;
+        double rxDiff = TrafficStats.getTotalRxBytes() - totalRxBefore;
+        checkAreEqual(response, testData);
         if ((rxDiff != 0) && (txDiff != 0)) {
-            double downloadKbps = rxDiff / timeDifference; // total rx bytes per second.
-            double uploadKbps = txDiff / timeDifference; // total tx bytes per second.
+            double downloadKbps = 8 * rxDiff / timeDifference;
+            double uploadKbps = 8 * txDiff / timeDifference;
             return asNetworkData(downloadKbps, uploadKbps);
         }
         return new NetworkData();
     }
 
+    void checkAreEqual(byte[] one, byte[] another) {
+        if (!Arrays.equals(one, another)) {
+            throw new RuntimeException("Response didn't match the request");
+        }
+    }
+
     byte[] randomBytes() {
-        byte[] bytes = new byte[1000];
+        byte[] bytes = new byte[1024];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) (Math.random() * 256);
         }
         return bytes;
     }
 
-    void sendBytes(byte[] bytes) {
-        byte[] response = template.postForObject(serverUrl + "/echo", bytes, byte[].class);
-        if (!Arrays.equals(response, bytes)) {
-            throw new RuntimeException("Response didn't match the request");
-        }
+    byte[] sendAndReceive(byte[] bytes) {
+        return template.postForObject(serverUrl + "/echo", bytes, byte[].class);
     }
 
     NetworkData asNetworkData(double rxBPS, double txBPS) {
