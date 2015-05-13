@@ -109,7 +109,8 @@ public class MainActivity extends ActionBarActivity {
 
     void performNetworkTest() {
         outputBox.setText("");
-        outputBox.append("Operator: " + phoneInfo.getOperatorName());
+        outputBox.append("Phone type: " + phoneInfo.getPhoneType());
+        outputBox.append('\n' + "Operator: " + phoneInfo.getOperatorName());
         outputBox.append('\n' + "Network Country: " + phoneInfo.getNetworkCountry());
         outputBox.append('\n' + "Network Operator code: " + phoneInfo.getNetworkOperator());
         outputBox.append('\n' + "Network type: " + phoneInfo.getNetworkType());
@@ -117,8 +118,8 @@ public class MainActivity extends ActionBarActivity {
             outputBox.append('\n' + cellInfo.getCellType() + ": " + cellInfo);
         }
         outputBox.append('\n' + String.format("Datums: %Tc", new Date()));
-        outputBox.append('\n' + "GPS koordinates: Platums =" + locationListener.getLatitude());
-        outputBox.append('\n' + "Garums=" + locationListener.getLongitude());
+        outputBox.append('\n' + "GPS coordinates: Lat =" + locationListener.getLatitude());
+        outputBox.append('\n' + "Long=" + locationListener.getLongitude());
         appendNetworkStats();
     }
 
@@ -128,6 +129,7 @@ public class MainActivity extends ActionBarActivity {
         outputBox.append(String.format("\nDownload speed: %.3f Kbps", networkData.getDownloadSpeed()));
         outputBox.append(String.format("\nUpload speed: %.3f Kbps", networkData.getUploadSpeed()));
         outputBox.append(String.format("\nPacket loss %d", networkData.getPacketLoss()) + "%");
+        outputBox.append(String.format("\nPing time %.1f", networkData.getPingTime()) + " ms");
     }
 
     NetworkData getNetworkData() {
@@ -171,9 +173,11 @@ public class MainActivity extends ActionBarActivity {
 
     GsmData gsmData() {
         GsmData gsmData = new GsmData();
+        gsmData.setPhoneType(phoneInfo.getPhoneType());
         gsmData.setNetworkCountry(phoneInfo.getNetworkCountry());
         gsmData.setNetworkOperator(phoneInfo.getNetworkOperator());
         gsmData.setOperatorName(phoneInfo.getOperatorName());
+        gsmData.setNetworkType(phoneInfo.getNetworkType());
         return gsmData;
     }
 }

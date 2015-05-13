@@ -40,6 +40,7 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
     protected NetworkData doInBackground(Void... params) {
         NetworkData networkData = speedData();
         networkData.setPacketLoss(calculatePacketLoss());
+        networkData.setPingTime(calculatePingTime());
         return networkData;
     }
 
@@ -56,6 +57,12 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         PingResult pingResult = pingResult();
         double loss = (1 - (double) pingResult.received() / pingResult.transmitted()) * 100;
         return (int) Math.round(loss);
+    }
+
+    Double calculatePingTime() {
+        PingResult pingResult = pingResult();
+        double pingTime = pingResult.rtt_avg();
+        return pingTime;
     }
 
     PingResult pingResult() {

@@ -4,6 +4,7 @@ public class NetworkData {
     Double uploadSpeed;
     Double downloadSpeed;
     Integer packetLoss;
+    Double pingTime;
 
     public Double getUploadSpeed() {
         return uploadSpeed;
@@ -27,5 +28,13 @@ public class NetworkData {
 
     public void setPacketLoss(Integer packetLoss) {
         this.packetLoss = packetLoss;
+    }
+
+    public Double getPingTime() {
+        return pingTime;
+    }
+
+    public void setPingTime(Double pingTime) {
+        this.pingTime = pingTime;
     }
 }
