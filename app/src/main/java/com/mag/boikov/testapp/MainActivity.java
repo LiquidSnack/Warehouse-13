@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.googlecode.jpingy.PingResult;
 import com.mag.boikov.testapp.communications.GsmData;
 import com.mag.boikov.testapp.communications.NetworkData;
 import com.mag.boikov.testapp.communications.Statistics;
@@ -23,7 +22,6 @@ import com.mag.boikov.testapp.communications.StatisticsSender;
 import com.mag.boikov.testapp.network_info.GeoLocationListener;
 import com.mag.boikov.testapp.network_info.NetFunctions;
 import com.mag.boikov.testapp.network_info.PhoneCellInfo;
-import com.mag.boikov.testapp.network_info.PingStats;
 import com.mag.boikov.testapp.network_info.parser.PhoneInfo;
 
 import org.springframework.http.HttpStatus;
@@ -114,40 +112,32 @@ public class MainActivity extends ActionBarActivity {
         outputBox.append("Operator: " + phoneInfo.getOperatorName());
         outputBox.append('\n' + "Network Country: " + phoneInfo.getNetworkCountry());
         outputBox.append('\n' + "Network Operator code: " + phoneInfo.getNetworkOperator());
+        outputBox.append('\n' + "Network type: " + phoneInfo.getNetworkType());
         for (PhoneCellInfo cellInfo : phoneInfo.getAllCellInfo()) {
             outputBox.append('\n' + cellInfo.getCellType() + ": " + cellInfo);
         }
         outputBox.append('\n' + String.format("Datums: %Tc", new Date()));
         outputBox.append('\n' + "GPS koordinates: Platums =" + locationListener.getLatitude());
         outputBox.append('\n' + "Garums=" + locationListener.getLongitude());
+        appendNetworkStats();
+    }
+
+    private void appendNetworkStats() {
         NetworkData networkData = getNetworkData();
-        outputBox.append(String.format("\nDownload speed: %.3f KB/s", networkData.getDownloadSpeed()));
-        outputBox.append(String.format("\nUploadload speed: %.3f KB/s", networkData.getUploadSpeed()));
+        if (networkData == null) return;
+        outputBox.append(String.format("\nDownload speed: %.3f Kbps", networkData.getDownloadSpeed()));
+        outputBox.append(String.format("\nUpload speed: %.3f Kbps", networkData.getUploadSpeed()));
+        outputBox.append(String.format("\nPacket loss %d", networkData.getPacketLoss()) + "%");
     }
 
     NetworkData getNetworkData() {
-        NetworkData networkData;
         try {
-            networkData = new NetFunctions(getApplicationContext()).execute()
-                                                                   .get();
+            return new NetFunctions(getApplicationContext()).execute()
+                                                            .get();
         } catch (Exception e) {
-            networkData = new NetworkData();
+            Log.e("Main", e.toString());
+            return null;
         }
-        return networkData;
-    }
-
-    private void appendPacketLossInfo() {
-        try {
-            appendPacketLoss();
-        } catch (RuntimeException re) {
-            Log.e("MainActivity", re.toString());
-        }
-    }
-
-    void appendPacketLoss() {
-        PingResult pingResult = PingStats.get(20000);
-        double packetLoss = (1 - (double) pingResult.received() / pingResult.transmitted()) * 100;
-        outputBox.append('\n' + String.format("Packet loss %.0f", packetLoss) + "%");
     }
 
     void sendData() {

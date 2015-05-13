@@ -6,6 +6,7 @@ import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 
 import com.mag.boikov.testapp.network_info.CdmaInfo;
 import com.mag.boikov.testapp.network_info.GsmInfo;
@@ -70,14 +71,18 @@ public class PhoneInfo {
     }
 
     public String getNetworkType() {
-        switch (telephonyManager.getNetworkType()) {
+        int networkType = telephonyManager.getNetworkType();
+        switch (networkType) {
             case TelephonyManager.NETWORK_TYPE_UMTS:
                 return "UMTS";
             case TelephonyManager.NETWORK_TYPE_CDMA:
                 return "CDMA";
             case TelephonyManager.NETWORK_TYPE_LTE:
                 return "LTE";
+            case TelephonyManager.NETWORK_TYPE_HSPAP:
+                return "HSPAP";
             default:
+                Log.e("PhoneInfo", "Unknown network type: " + networkType);
                 return "Undetermined";
         }
     }
