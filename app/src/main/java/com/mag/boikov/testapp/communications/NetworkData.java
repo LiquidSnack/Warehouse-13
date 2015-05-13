@@ -1,6 +1,8 @@
 package com.mag.boikov.testapp.communications;
 
 public class NetworkData {
+    public static final NetworkData EMPTY = new NetworkData();
+
     Double uploadSpeed;
     Double downloadSpeed;
     Integer packetLoss;

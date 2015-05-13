@@ -16,20 +16,15 @@ import android.util.Log;
 import com.mag.boikov.testapp.communications.GpsData;
 
 public class GeoLocationListener extends AsyncTask<Void, Void, GpsData> implements LocationListener {
-
+    private final Context mContext;
     public double latitude;
     public double longitude;
-
-    private final Context mContext;
-
     boolean isGPSEnabled = false;
     boolean isNetworkEnabled = false;
     boolean canGetLocation = false;
-
     Location location;
-
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
-    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60;
 
     protected LocationManager locationManager;
 
@@ -106,12 +101,6 @@ public class GeoLocationListener extends AsyncTask<Void, Void, GpsData> implemen
     public void onProviderDisabled(String provider) {
 
     }
-
-
-   /* @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }*/
 
     public double getLatitude() {
         if (location != null) {
