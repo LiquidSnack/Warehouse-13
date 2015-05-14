@@ -37,15 +37,6 @@ public class MainActivity extends ActionBarActivity {
     NetFunctions netFunctions;
     GeoLocationListener locationListener;
 
-    public class Data {
-        private String operatorName;
-        private String networkCountry;
-        private String networkOperator;
-        private String dateTime;
-        private String gpsLatitude;
-        private String gpsLongitude;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,17 +61,6 @@ public class MainActivity extends ActionBarActivity {
         });
 
         netFunctions = new NetFunctions(this);
-
-        AlertDialog alert = new AlertDialog.Builder(this).create(); //предупреждение
-        alert.setTitle("Error");
-        alert.setMessage("No network connection");
-        alert.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-
         locationListener = new GeoLocationListener(getApplicationContext());
     }
 
@@ -98,38 +78,31 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return item.getItemId() == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     void performNetworkTest() {
         outputBox.setText("");
-        outputBox.append("Phone type: " + phoneInfo.getPhoneType());
+        outputBox.append("Phone Type: " + phoneInfo.getPhoneType());
         outputBox.append('\n' + "Operator: " + phoneInfo.getOperatorName());
         outputBox.append('\n' + "Network Country: " + phoneInfo.getNetworkCountry());
-        outputBox.append('\n' + "Network Operator code: " + phoneInfo.getNetworkOperator());
-        outputBox.append('\n' + "Network type: " + phoneInfo.getNetworkType());
+        outputBox.append('\n' + "Network Operator Code: " + phoneInfo.getNetworkOperator());
+        outputBox.append('\n' + "Network Type: " + phoneInfo.getNetworkType());
         for (PhoneCellInfo cellInfo : phoneInfo.getAllCellInfo()) {
             outputBox.append('\n' + cellInfo.getCellType() + ": " + cellInfo);
         }
         outputBox.append('\n' + String.format("Datums: %Tc", new Date()));
-        outputBox.append('\n' + "GPS coordinates: Lat =" + locationListener.getLatitude());
-        outputBox.append('\n' + "Long=" + locationListener.getLongitude());
+        outputBox.append('\n' + "Location: " + locationListener.getLatitude() + ";" + locationListener.getLongitude());
         appendNetworkStats();
     }
 
     private void appendNetworkStats() {
         NetworkData networkData = getNetworkData();
-        if (networkData == null) return;
-        outputBox.append(String.format("\nDownload speed: %.3f Kbps", networkData.getDownloadSpeed()));
-        outputBox.append(String.format("\nUpload speed: %.3f Kbps", networkData.getUploadSpeed()));
-        outputBox.append(String.format("\nPacket loss %d", networkData.getPacketLoss()) + "%");
-        outputBox.append(String.format("\nPing time %.1f", networkData.getPingTime()) + " ms");
+        if (networkData == NetworkData.EMPTY) return;
+        outputBox.append(String.format("\nDownload Speed: %.3f Kbps", networkData.getDownloadSpeed()));
+        outputBox.append(String.format("\nUpload Speed: %.3f Kbps", networkData.getUploadSpeed()));
+        outputBox.append(String.format("\nPacket Loss: %d", networkData.getPacketLoss()) + "%");
+        outputBox.append(String.format("\nPing Time: %.1f", networkData.getPingTime()) + " ms");
     }
 
     NetworkData getNetworkData() {
@@ -138,7 +111,7 @@ public class MainActivity extends ActionBarActivity {
                                                             .get();
         } catch (Exception e) {
             Log.e("Main", e.toString());
-            return null;
+            return NetworkData.EMPTY;
         }
     }
 
@@ -160,6 +133,8 @@ public class MainActivity extends ActionBarActivity {
         statistics.setGsmData(gsmData());
         statistics.setTestPerformedAt(new Date());
         statistics.setCellInfoByType(cellInfoByType());
+        statistics.setNetworkData(getNetworkData());
+        statistics.setGpsData(locationListener.getLocation());
         return statistics;
     }
 

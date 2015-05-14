@@ -25,6 +25,12 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
 
     RestTemplate template = buildTemplate();
 
+    class Stats {
+        long txBytes;
+        long rxBytes;
+        long time;
+    }
+
     public NetFunctions(Context mContext) {
         this.mContext = mContext;
     }
@@ -38,9 +44,15 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
 
     @Override
     protected NetworkData doInBackground(Void... params) {
+        PingResult pingResult = pingResult();
+        if (pingResult == null) return NetworkData.EMPTY;
+        return networkDataWithPingResult(pingResult);
+    }
+
+    private NetworkData networkDataWithPingResult(PingResult pingResult) {
         NetworkData networkData = speedData();
-        networkData.setPacketLoss(calculatePacketLoss());
-        networkData.setPingTime(calculatePingTime());
+        networkData.setPacketLoss(calculatePacketLoss(pingResult));
+        networkData.setPingTime((double) pingResult.rtt_avg());
         return networkData;
     }
 
@@ -49,20 +61,13 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
             return runSpeedTest();
         } catch (Exception e) {
             Log.e("NetFunctions", e.toString());
-            return new NetworkData();
+            return NetworkData.EMPTY;
         }
     }
 
-    Integer calculatePacketLoss() {
-        PingResult pingResult = pingResult();
+    Integer calculatePacketLoss(PingResult pingResult) {
         double loss = (1 - (double) pingResult.received() / pingResult.transmitted()) * 100;
         return (int) Math.round(loss);
-    }
-
-    Double calculatePingTime() {
-        PingResult pingResult = pingResult();
-        double pingTime = pingResult.rtt_avg();
-        return pingTime;
     }
 
     PingResult pingResult() {
@@ -75,20 +80,29 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
 
     NetworkData runSpeedTest() {
         byte[] testData = randomBytes();
-        long totalRxBefore = TrafficStats.getTotalRxBytes();
-        long totalTxBefore = TrafficStats.getTotalTxBytes();
-        long beforeTime = System.currentTimeMillis();
+        Stats before = stats();
         byte[] response = sendAndReceive(testData);
-        double timeDifference = System.currentTimeMillis() - beforeTime;
-        double txDiff = TrafficStats.getTotalTxBytes() - totalTxBefore;
-        double rxDiff = TrafficStats.getTotalRxBytes() - totalRxBefore;
+        Stats after = stats();
         checkAreEqual(response, testData);
-        if ((rxDiff != 0) && (txDiff != 0)) {
-            double downloadKbps = 8 * rxDiff / timeDifference;
-            double uploadKbps = 8 * txDiff / timeDifference;
-            return asNetworkData(downloadKbps, uploadKbps);
-        }
-        return new NetworkData();
+        return networkDataFromDiff(before, after);
+    }
+
+    NetworkData networkDataFromDiff(Stats before, Stats after) {
+        double txDiff = after.txBytes - before.txBytes;
+        double rxDiff = after.rxBytes - before.rxBytes;
+        if (rxDiff == 0 || txDiff == 0) return NetworkData.EMPTY;
+        double timeDifference = after.time - before.time;
+        double downloadKbps = 8 * rxDiff / timeDifference;
+        double uploadKbps = 8 * txDiff / timeDifference;
+        return asNetworkData(downloadKbps, uploadKbps);
+    }
+
+    Stats stats() {
+        Stats stats = new Stats();
+        stats.rxBytes = TrafficStats.getTotalRxBytes();
+        stats.txBytes = TrafficStats.getTotalTxBytes();
+        stats.time = System.currentTimeMillis();
+        return stats;
     }
 
     void checkAreEqual(byte[] one, byte[] another) {
