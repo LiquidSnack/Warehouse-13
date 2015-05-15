@@ -1,9 +1,14 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:layout_height="fill_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/name_view">
 
     <TextView android:text="@string/nosaukums" android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,19 +21,18 @@
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:id="@+id/outputBox"
         android:enabled="true"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/StartTest"
-        android:layout_alignParentStart="true"
         android:maxLines="20"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical"
+        android:text="Output:"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/start_button"
         android:id="@+id/StartTest"
-        android:layout_marginTop="16dp"
-        android:layout_below="@+id/Title"
+        android:layout_alignBottom="@+id/editText2"
         android:layout_alignParentStart="true" />
 
     <Button
@@ -37,7 +41,103 @@
         android:text="@string/send_button"
         android:id="@+id/Send"
         android:enabled="true"
-        android:layout_alignTop="@+id/StartTest"
-        android:layout_toEndOf="@+id/Title" />
+        android:layout_below="@+id/comment"
+        android:layout_alignEnd="@+id/personAquiet" />
 
-</RelativeLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/phoneNum"
+        android:id="@+id/phoneNum"
+        android:enabled="true"
+        android:editable="false"
+        android:layout_below="@+id/Title"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/callDrop"
+        android:id="@+id/callDrop"
+        android:checked="false"
+        android:layout_below="@+id/personBquiet"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/faultTitle"
+        android:id="@+id/faultTitle"
+        android:editable="false"
+        android:enabled="false"
+        android:layout_below="@+id/editText"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/personBquiet"
+        android:id="@+id/personBquiet"
+        android:checked="false"
+        android:layout_below="@+id/faultTitle"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/personAquiet"
+        android:id="@+id/personAquiet"
+        android:checked="false"
+        android:layout_below="@+id/callDrop"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/badSound"
+        android:id="@+id/badSound"
+        android:checked="false"
+        android:layout_below="@+id/personAquiet"
+        android:layout_alignParentStart="true" />
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/slowNet"
+        android:id="@+id/slowNet"
+        android:layout_alignParentStart="true"
+        android:checked="false"
+        android:layout_below="@+id/badSound"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/comment"
+        android:id="@+id/comment"
+        android:layout_alignParentStart="true"
+        android:enabled="true"
+        android:editable="false"
+        android:layout_below="@+id/slowNet"
+        android:layout_alignParentLeft="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="phone"
+            android:ems="10"
+            android:id="@+id/editText"
+            android:layout_below="@+id/phoneNum"
+            android:layout_alignParentStart="true" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/editText2"
+            android:layout_below="@+id/comment"
+            android:layout_alignParentStart="true" />
+
+    </RelativeLayout>
+</ScrollView>
