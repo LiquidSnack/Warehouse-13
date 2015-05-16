@@ -11,10 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import com.mag.boikov.testapp.communications.GsmData;
 import com.mag.boikov.testapp.communications.Statistics;
 import com.mag.boikov.testapp.communications.StatisticsSender;
+import com.mag.boikov.testapp.communications.UserData;
 import com.mag.boikov.testapp.network_info.GeoLocationListener;
 import com.mag.boikov.testapp.network_info.NetFunctions;
 import com.mag.boikov.testapp.network_info.PhoneCellInfo;
@@ -33,6 +35,8 @@ import butterknife.InjectView;
 public class SendFragment extends Fragment {
     @InjectView(R.id.send)
     Button sendButton;
+    EditText phoneBox;
+    EditText commentBox;
 
     PhoneInfo phoneInfo;
     GeoLocationListener locationListener;
@@ -43,6 +47,8 @@ public class SendFragment extends Fragment {
         View view = inflater.inflate(R.layout.send_fragment, container, false);
         ButterKnife.inject(this, view);
         setup();
+        String phoneNumber = phoneBox.getText().toString();
+        String comment = commentBox.getText().toString();
         return view;
     }
 
@@ -103,6 +109,13 @@ public class SendFragment extends Fragment {
         gsmData.setOperatorName(phoneInfo.getOperatorName());
         gsmData.setNetworkType(phoneInfo.getNetworkType());
         return gsmData;
+    }
+
+    UserData userData() {
+        UserData userData = new UserData();
+        //userData.setPhoneNum();
+        //userData.setComment();
+        return userData();
     }
 
     Context context() {

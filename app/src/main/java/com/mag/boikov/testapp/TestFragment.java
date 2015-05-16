@@ -29,6 +29,7 @@ public class TestFragment extends Fragment {
     @InjectView(R.id.testOutput)
     TextView outputBox;
 
+
     PhoneInfo phoneInfo;
     GeoLocationListener locationListener;
 
