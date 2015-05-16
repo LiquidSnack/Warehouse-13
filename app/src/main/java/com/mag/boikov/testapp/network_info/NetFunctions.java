@@ -21,7 +21,7 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
 
     static int TIME_OUT_MS = 3000;
 
-    final Context mContext;
+    final Context context;
 
     RestTemplate template = buildTemplate();
 
@@ -31,15 +31,18 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         long time;
     }
 
-    public NetFunctions(Context mContext) {
-        this.mContext = mContext;
+    NetFunctions(Context context) {
+        this.context = context;
     }
 
-    RestTemplate buildTemplate() {
-        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setConnectTimeout(TIME_OUT_MS);
-        factory.setReadTimeout(TIME_OUT_MS);
-        return new RestTemplate(factory);
+    public static NetworkData getNetworkData(Context context) {
+        try {
+            return new NetFunctions(context).execute()
+                                            .get();
+        } catch (Exception e) {
+            Log.e("NetFunctions", e.toString());
+            return NetworkData.EMPTY;
+        }
     }
 
     @Override
@@ -49,7 +52,14 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         return networkDataWithPingResult(pingResult);
     }
 
-    private NetworkData networkDataWithPingResult(PingResult pingResult) {
+    RestTemplate buildTemplate() {
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        factory.setConnectTimeout(TIME_OUT_MS);
+        factory.setReadTimeout(TIME_OUT_MS);
+        return new RestTemplate(factory);
+    }
+
+    NetworkData networkDataWithPingResult(PingResult pingResult) {
         NetworkData networkData = speedData();
         networkData.setPacketLoss(calculatePacketLoss(pingResult));
         networkData.setPingTime((double) pingResult.rtt_avg());

@@ -35,7 +35,7 @@ public class GsmData {
         this.networkCountry = networkCountry;
     }
 
-    public String getNetworkType () {
+    public String getNetworkType() {
         return networkType;
     }
 
@@ -43,7 +43,7 @@ public class GsmData {
         this.networkType = networkType;
     }
 
-    public String getPhoneType () {
+    public String getPhoneType() {
         return phoneType;
     }
 
