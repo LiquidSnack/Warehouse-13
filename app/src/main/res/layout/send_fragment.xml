@@ -24,11 +24,11 @@
         android:text="@string/phoneNum"/>
 
     <CheckBox
-        android:id="@+id/callDrop"
+        android:id="@+id/callGetsInterrupted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/personBquiet"
+        android:layout_below="@+id/cantHearOtherParty"
         android:checked="false"
         android:text="@string/callDrop"/>
 
@@ -42,7 +42,7 @@
         android:text="@string/faultTitle"/>
 
     <CheckBox
-        android:id="@+id/personBquiet"
+        android:id="@+id/cantHearOtherParty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
@@ -51,30 +51,30 @@
         android:text="@string/personBquiet"/>
 
     <CheckBox
-        android:id="@+id/personAquiet"
+        android:id="@+id/otherPartyCantHearMe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/callDrop"
+        android:layout_below="@+id/callGetsInterrupted"
         android:checked="false"
         android:text="@string/personAquiet"/>
 
     <CheckBox
-        android:id="@+id/badSound"
+        android:id="@+id/poorSoundQuality"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/personAquiet"
+        android:layout_below="@+id/otherPartyCantHearMe"
         android:checked="false"
         android:text="@string/badSound"/>
 
     <CheckBox
-        android:id="@+id/slowNet"
+        android:id="@+id/slowInternetConnection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/badSound"
+        android:layout_below="@+id/poorSoundQuality"
         android:checked="false"
         android:text="@string/slowNet"/>
 
@@ -84,7 +84,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/slowNet"
+        android:layout_below="@+id/slowInternetConnection"
         android:editable="false"
         android:enabled="true"
         android:text="@string/comment"/>

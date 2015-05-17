@@ -18,6 +18,8 @@ public class Statistics {
     @JsonProperty("cellInfo")
     Map<String, PhoneCellInfo> cellInfoByType;
 
+    UserData userData;
+
     public GsmData getGsmData() {
         return gsmData;
     }
@@ -56,5 +58,13 @@ public class Statistics {
 
     public void setCellInfoByType(Map<String, PhoneCellInfo> cellInfoByType) {
         this.cellInfoByType = cellInfoByType;
+    }
+
+    public UserData getUserData() {
+        return userData;
+    }
+
+    public void setUserData(UserData userData) {
+        this.userData = userData;
     }
 }
