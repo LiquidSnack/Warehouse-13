@@ -122,7 +122,10 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
     }
 
     byte[] randomBytes() {
-        byte[] bytes = new byte[1024];
+        int ONE_BYTE = 1;
+        int ONE_KB = 1024 * ONE_BYTE;
+        int ONE_MB = 1024 * ONE_KB;
+        byte[] bytes = new byte[ONE_MB];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) (Math.random() * 256);
         }

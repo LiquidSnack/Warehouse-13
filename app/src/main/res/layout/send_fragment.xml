@@ -38,7 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@+id/phoneBox"
-        android:enabled="false"
+        android:enabled="true"
         android:text="@string/faultTitle"/>
 
     <CheckBox
