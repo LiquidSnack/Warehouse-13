@@ -16,14 +16,14 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 
 public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
-
     static final String serverUrl = "http://52.11.170.103:4848";
-
-    static int TIME_OUT_MS = 3000;
+    static final int TIME_OUT_MS = 3000;
+    static final int ONE_BYTE = 1;
+    static final int ONE_KB = 1024 * ONE_BYTE;
+    static final int ONE_MB = 1024 * ONE_KB;
 
     final Context context;
-
-    RestTemplate template = buildTemplate();
+    final RestTemplate rest;
 
     class Stats {
         long txBytes;
@@ -33,6 +33,14 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
 
     NetFunctions(Context context) {
         this.context = context;
+        rest = buildRest();
+    }
+
+    RestTemplate buildRest() {
+        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
+        factory.setConnectTimeout(TIME_OUT_MS);
+        factory.setReadTimeout(TIME_OUT_MS);
+        return new RestTemplate(factory);
     }
 
     public static NetworkData getNetworkData(Context context) {
@@ -50,13 +58,6 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         PingResult pingResult = pingResult();
         if (pingResult == null) return NetworkData.EMPTY;
         return networkDataWithPingResult(pingResult);
-    }
-
-    RestTemplate buildTemplate() {
-        HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setConnectTimeout(TIME_OUT_MS);
-        factory.setReadTimeout(TIME_OUT_MS);
-        return new RestTemplate(factory);
     }
 
     NetworkData networkDataWithPingResult(PingResult pingResult) {
@@ -122,9 +123,6 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
     }
 
     byte[] randomBytes() {
-        int ONE_BYTE = 1;
-        int ONE_KB = 1024 * ONE_BYTE;
-        int ONE_MB = 1024 * ONE_KB;
         byte[] bytes = new byte[ONE_MB];
         for (int i = 0; i < bytes.length; i++) {
             bytes[i] = (byte) (Math.random() * 256);
@@ -133,7 +131,7 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
     }
 
     byte[] sendAndReceive(byte[] bytes) {
-        return template.postForObject(serverUrl + "/echo", bytes, byte[].class);
+        return rest.postForObject(serverUrl + "/echo", bytes, byte[].class);
     }
 
     NetworkData asNetworkData(double rxBPS, double txBPS) {
