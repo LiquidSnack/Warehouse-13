@@ -43,15 +43,24 @@ public class TestFragment extends Fragment {
     }
 
     void setup() {
+        Context context = context();
+        phoneInfo = PhoneInfo.fromContext(context);
+        locationListener = new GeoLocationListener(context);
         outputBox.setMovementMethod(new ScrollingMovementMethod());
-        phoneInfo = PhoneInfo.fromContext(context());
+        setupStartTestButton();
+    }
+
+    void setupStartTestButton() {
         startTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 performNetworkTest();
             }
         });
-        locationListener = new GeoLocationListener(context());
+    }
+
+    Context context() {
+        return getActivity().getApplicationContext();
     }
 
     void performNetworkTest() {
@@ -70,15 +79,11 @@ public class TestFragment extends Fragment {
     }
 
     void appendNetworkStats() {
-        NetworkData networkData = NetFunctions.getNetworkData(context());
+        NetworkData networkData = NetFunctions.getNetworkData();
         if (networkData == NetworkData.EMPTY) return;
         outputBox.append(String.format("\nDownload Speed: %.3f Kbps", networkData.getDownloadSpeed()));
         outputBox.append(String.format("\nUpload Speed: %.3f Kbps", networkData.getUploadSpeed()));
         outputBox.append(String.format("\nPacket Loss: %d", networkData.getPacketLoss()) + "%");
         outputBox.append(String.format("\nPing Time: %.1f", networkData.getPingTime()) + " ms");
-    }
-
-    Context context() {
-        return getActivity().getApplicationContext();
     }
 }

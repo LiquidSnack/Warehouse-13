@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">TestApp</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
@@ -15,5 +14,6 @@
     <string name="badSound">Slikta dzirdamība (atbalss, trokšņi u.t.t.)</string>
     <string name="slowNet">Lēns internets</string>
     <string name="comment">Jūsu komentāri (nav obligāti)</string>
-
+    <string name="serverIp">52.28.111.52</string>
+    <string name="serverPort">4848</string>
 </resources>
