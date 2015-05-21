@@ -15,12 +15,14 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 
 import com.mag.boikov.testapp.communications.Complaint;
+import com.mag.boikov.testapp.communications.GpsData;
 import com.mag.boikov.testapp.communications.GsmData;
+import com.mag.boikov.testapp.communications.NetworkData;
 import com.mag.boikov.testapp.communications.Statistics;
 import com.mag.boikov.testapp.communications.StatisticsSender;
 import com.mag.boikov.testapp.communications.UserComments;
-import com.mag.boikov.testapp.network_info.GeoLocationListener;
-import com.mag.boikov.testapp.network_info.NetFunctions;
+import com.mag.boikov.testapp.network_info.GetGpsLocationTask;
+import com.mag.boikov.testapp.network_info.GetNetworkStatisticsTask;
 import com.mag.boikov.testapp.network_info.PhoneCellInfo;
 import com.mag.boikov.testapp.network_info.parser.PhoneInfo;
 
@@ -53,7 +55,8 @@ public class SendFragment extends Fragment {
     List<CheckBox> complaintCheckBoxes;
 
     PhoneInfo phoneInfo;
-    GeoLocationListener locationListener;
+    GetGpsLocationTask getGpsLocationTask;
+    GetNetworkStatisticsTask getNetworkStatisticsTask;
 
     @Nullable
     @Override
@@ -67,7 +70,8 @@ public class SendFragment extends Fragment {
     void setup() {
         Context context = context();
         phoneInfo = PhoneInfo.fromContext(context);
-        locationListener = new GeoLocationListener(context);
+        getGpsLocationTask = new GetGpsLocationTask(context);
+        getNetworkStatisticsTask = new GetNetworkStatisticsTask();
         setupSendButton();
     }
 
@@ -101,14 +105,26 @@ public class SendFragment extends Fragment {
     }
 
     Statistics buildStatistics() {
+        executeTasks();
         Statistics statistics = new Statistics();
         statistics.setGsmData(gsmData());
         statistics.setTestPerformedAt(new Date());
         statistics.setCellInfoByType(cellInfoByType());
-        statistics.setNetworkData(NetFunctions.getNetworkData());
-        statistics.setGpsData(locationListener.getLocation());
+        NetworkData networkData = getNetworkStatisticsTask.getNetworkData();
+        if (networkData != NetworkData.EMPTY) {
+            statistics.setNetworkData(networkData);
+        }
+        GpsData gpsData = getGpsLocationTask.getGpsData();
+        if (gpsData != GpsData.EMPTY) {
+            statistics.setGpsData(gpsData);
+        }
         statistics.setUserComments(userData());
         return statistics;
+    }
+
+    void executeTasks() {
+        getGpsLocationTask.execute();
+        getNetworkStatisticsTask.execute();
     }
 
     Map<String, PhoneCellInfo> cellInfoByType() {
