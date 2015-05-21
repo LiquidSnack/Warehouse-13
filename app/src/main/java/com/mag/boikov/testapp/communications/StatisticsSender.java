@@ -12,11 +12,11 @@ import org.springframework.web.client.RestTemplate;
 import java.util.List;
 
 public class StatisticsSender extends AsyncTask<Statistics, Void, HttpStatus> {
-    static final String serverUrl = "http://52.11.170.103:4848";
-
+    final String endpointUrl;
     RestTemplate restTemplate;
 
     public StatisticsSender() {
+        endpointUrl = System.getProperty("endpointUrl");
         init();
     }
 
@@ -30,15 +30,15 @@ public class StatisticsSender extends AsyncTask<Statistics, Void, HttpStatus> {
     @Override
     protected HttpStatus doInBackground(Statistics... params) {
         try {
-            return sendStatistics(params[0]);
+            return send(params[0]);
         } catch (Exception e) {
             Log.e("StatisticsSender", e.toString());
             return HttpStatus.I_AM_A_TEAPOT;
         }
     }
 
-    HttpStatus sendStatistics(Statistics statistics) {
-        return restTemplate.postForEntity(serverUrl, statistics, Void.class)
+    HttpStatus send(Statistics statistics) {
+        return restTemplate.postForEntity(endpointUrl, statistics, Void.class)
                            .getStatusCode();
     }
 }

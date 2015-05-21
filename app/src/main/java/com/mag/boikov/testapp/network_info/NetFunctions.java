@@ -1,6 +1,5 @@
 package com.mag.boikov.testapp.network_info;
 
-import android.content.Context;
 import android.net.TrafficStats;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -16,13 +15,13 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 
 public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
-    static final String serverUrl = "http://52.11.170.103:4848";
     static final int TIME_OUT_MS = 3000;
     static final int ONE_BYTE = 1;
     static final int ONE_KB = 1024 * ONE_BYTE;
     static final int ONE_MB = 1024 * ONE_KB;
 
-    final Context context;
+    final String serverIp;
+    final String echoEndpointUrl;
     final RestTemplate rest;
 
     class Stats {
@@ -31,8 +30,9 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         long time;
     }
 
-    NetFunctions(Context context) {
-        this.context = context;
+    NetFunctions() {
+        serverIp = System.getProperty("serverIp");
+        echoEndpointUrl = System.getProperty("endpointUrl") + "/echo";
         rest = buildRest();
     }
 
@@ -43,10 +43,10 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         return new RestTemplate(factory);
     }
 
-    public static NetworkData getNetworkData(Context context) {
+    public static NetworkData getNetworkData() {
         try {
-            return new NetFunctions(context).execute()
-                                            .get();
+            return new NetFunctions().execute()
+                                     .get();
         } catch (Exception e) {
             Log.e("NetFunctions", e.toString());
             return NetworkData.EMPTY;
@@ -82,7 +82,7 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
     }
 
     PingResult pingResult() {
-        PingArguments args = new PingArguments.Builder().url("52.11.170.103")
+        PingArguments args = new PingArguments.Builder().url(serverIp)
                                                         .count(5)
                                                         .bytes(32)
                                                         .build();
@@ -131,7 +131,7 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
     }
 
     byte[] sendAndReceive(byte[] bytes) {
-        return rest.postForObject(serverUrl + "/echo", bytes, byte[].class);
+        return rest.postForObject(echoEndpointUrl, bytes, byte[].class);
     }
 
     NetworkData asNetworkData(double rxBPS, double txBPS) {

@@ -14,8 +14,15 @@ public class PagerActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setSystemProperties();
         setContentView(R.layout.pager);
         ButterKnife.inject(this);
         pager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
+    }
+
+    private void setSystemProperties() {
+        String serverIp = getString(R.string.serverIp);
+        System.setProperty("serverIp", serverIp);
+        System.setProperty("endpointUrl", String.format("http://%s:%s", serverIp, getString(R.string.serverPort)));
     }
 }

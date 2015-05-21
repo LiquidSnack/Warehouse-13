@@ -38,6 +38,8 @@ import butterknife.InjectView;
 import butterknife.InjectViews;
 
 public class SendFragment extends Fragment {
+    static final int SEND_STATISTICS_TIMEOUT = 3;
+
     @InjectView(R.id.send)
     Button sendButton;
 
@@ -63,15 +65,20 @@ public class SendFragment extends Fragment {
     }
 
     void setup() {
-        sendButton.setEnabled(isNetworkConnectionAvailable());
+        Context context = context();
+        phoneInfo = PhoneInfo.fromContext(context);
+        locationListener = new GeoLocationListener(context);
+        setupSendButton();
+    }
+
+    void setupSendButton() {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 sendData();
             }
         });
-        phoneInfo = PhoneInfo.fromContext(getActivity().getApplicationContext());
-        locationListener = new GeoLocationListener(context());
+        sendButton.setEnabled(isNetworkConnectionAvailable());
     }
 
     boolean isNetworkConnectionAvailable() {
@@ -84,7 +91,7 @@ public class SendFragment extends Fragment {
         Statistics statistics = buildStatistics();
         try {
             HttpStatus httpStatus = new StatisticsSender().execute(statistics)
-                                                          .get(3, TimeUnit.SECONDS);
+                                                          .get(SEND_STATISTICS_TIMEOUT, TimeUnit.SECONDS);
             if (httpStatus != HttpStatus.OK) {
                 Log.e("SendFragment", "Got response status " + httpStatus);
             }
@@ -98,7 +105,7 @@ public class SendFragment extends Fragment {
         statistics.setGsmData(gsmData());
         statistics.setTestPerformedAt(new Date());
         statistics.setCellInfoByType(cellInfoByType());
-        statistics.setNetworkData(NetFunctions.getNetworkData(context()));
+        statistics.setNetworkData(NetFunctions.getNetworkData());
         statistics.setGpsData(locationListener.getLocation());
         statistics.setUserComments(userData());
         return statistics;
@@ -125,9 +132,9 @@ public class SendFragment extends Fragment {
     UserComments userData() {
         UserComments userComments = new UserComments();
         userComments.setContactPhone(phoneBox.getText()
-                                                 .toString());
+                                             .toString());
         userComments.setComment(commentBox.getText()
-                                      .toString());
+                                          .toString());
         userComments.setComplaints(complaints());
         return userComments;
     }
