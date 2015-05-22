@@ -1,6 +1,8 @@
 package com.mag.boikov.testapp.communications;
 
 public class GpsData {
+    public static GpsData EMPTY = new GpsData();
+
     Double latitude;
     Double longitude;
 

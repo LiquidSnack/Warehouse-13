@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 
-public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
+public class GetNetworkStatisticsTask extends AsyncTask<Void, Void, NetworkData> {
     static final int TIME_OUT_MS = 3000;
     static final int ONE_BYTE = 1;
     static final int ONE_KB = 1024 * ONE_BYTE;
@@ -30,7 +30,7 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         long time;
     }
 
-    NetFunctions() {
+    public GetNetworkStatisticsTask() {
         serverIp = System.getProperty("serverIp");
         echoEndpointUrl = System.getProperty("endpointUrl") + "/echo";
         rest = buildRest();
@@ -41,16 +41,6 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         factory.setConnectTimeout(TIME_OUT_MS);
         factory.setReadTimeout(TIME_OUT_MS);
         return new RestTemplate(factory);
-    }
-
-    public static NetworkData getNetworkData() {
-        try {
-            return new NetFunctions().execute()
-                                     .get();
-        } catch (Exception e) {
-            Log.e("NetFunctions", e.toString());
-            return NetworkData.EMPTY;
-        }
     }
 
     @Override
@@ -71,7 +61,7 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         try {
             return runSpeedTest();
         } catch (Exception e) {
-            Log.e("NetFunctions", e.toString());
+            Log.e("GetNetworkStatistics", e.toString());
             return NetworkData.EMPTY;
         }
     }
@@ -139,5 +129,14 @@ public class NetFunctions extends AsyncTask<Void, Void, NetworkData> {
         networkData.setUploadSpeed(rxBPS);
         networkData.setDownloadSpeed(txBPS);
         return networkData;
+    }
+
+    public NetworkData getNetworkData() {
+        try {
+            return get();
+        } catch (Exception e) {
+            Log.e("GetNetworkStatistics", e.toString());
+            return NetworkData.EMPTY;
+        }
     }
 }
