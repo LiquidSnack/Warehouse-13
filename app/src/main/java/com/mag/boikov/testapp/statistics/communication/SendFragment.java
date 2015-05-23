@@ -1,4 +1,4 @@
-package com.mag.boikov.testapp;
+package com.mag.boikov.testapp.statistics.communication;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -14,17 +14,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.mag.boikov.testapp.communications.Complaint;
-import com.mag.boikov.testapp.communications.GpsData;
-import com.mag.boikov.testapp.communications.GsmData;
-import com.mag.boikov.testapp.communications.NetworkData;
-import com.mag.boikov.testapp.communications.Statistics;
-import com.mag.boikov.testapp.communications.StatisticsSender;
-import com.mag.boikov.testapp.communications.UserComments;
-import com.mag.boikov.testapp.network_info.GetGpsLocationTask;
-import com.mag.boikov.testapp.network_info.GetNetworkStatisticsTask;
-import com.mag.boikov.testapp.network_info.PhoneCellInfo;
-import com.mag.boikov.testapp.network_info.parser.PhoneInfo;
+import com.mag.boikov.testapp.R;
+import com.mag.boikov.testapp.statistics.GpsData;
+import com.mag.boikov.testapp.statistics.GpsLocationListener;
+import com.mag.boikov.testapp.statistics.GsmData;
+import com.mag.boikov.testapp.statistics.NetworkStats;
+import com.mag.boikov.testapp.statistics.PhoneCellInfo;
+import com.mag.boikov.testapp.statistics.PhoneInfo;
+import com.mag.boikov.testapp.statistics.acquisition.GetNetworkStatsTask;
 
 import org.springframework.http.HttpStatus;
 
@@ -55,8 +52,7 @@ public class SendFragment extends Fragment {
     List<CheckBox> complaintCheckBoxes;
 
     PhoneInfo phoneInfo;
-    GetGpsLocationTask getGpsLocationTask;
-    GetNetworkStatisticsTask getNetworkStatisticsTask;
+    GpsLocationListener gpsLocationListener;
 
     @Nullable
     @Override
@@ -70,8 +66,7 @@ public class SendFragment extends Fragment {
     void setup() {
         Context context = context();
         phoneInfo = PhoneInfo.fromContext(context);
-        getGpsLocationTask = new GetGpsLocationTask(context);
-        getNetworkStatisticsTask = new GetNetworkStatisticsTask();
+        gpsLocationListener = GpsLocationListener.register(context);
         setupSendButton();
     }
 
@@ -105,16 +100,16 @@ public class SendFragment extends Fragment {
     }
 
     Statistics buildStatistics() {
-        executeTasks();
+        GetNetworkStatsTask getNetworkStatsTask = executeGetNetworkStatsTask();
         Statistics statistics = new Statistics();
         statistics.setGsmData(gsmData());
         statistics.setTestPerformedAt(new Date());
         statistics.setCellInfoByType(cellInfoByType());
-        NetworkData networkData = getNetworkStatisticsTask.getNetworkData();
-        if (networkData != NetworkData.EMPTY) {
-            statistics.setNetworkData(networkData);
+        NetworkStats networkStats = getNetworkStatsTask.getNetworkData();
+        if (networkStats != NetworkStats.EMPTY) {
+            statistics.setNetworkStats(networkStats);
         }
-        GpsData gpsData = getGpsLocationTask.getGpsData();
+        GpsData gpsData = gpsLocationListener.gpsData();
         if (gpsData != GpsData.EMPTY) {
             statistics.setGpsData(gpsData);
         }
@@ -122,9 +117,10 @@ public class SendFragment extends Fragment {
         return statistics;
     }
 
-    void executeTasks() {
-        getGpsLocationTask.execute();
-        getNetworkStatisticsTask.execute();
+    GetNetworkStatsTask executeGetNetworkStatsTask() {
+        GetNetworkStatsTask getNetworkStatsTask = new GetNetworkStatsTask();
+        getNetworkStatsTask.execute();
+        return getNetworkStatsTask;
     }
 
     Map<String, PhoneCellInfo> cellInfoByType() {

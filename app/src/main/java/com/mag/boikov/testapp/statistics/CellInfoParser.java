@@ -1,16 +1,10 @@
-package com.mag.boikov.testapp.network_info.parser;
+package com.mag.boikov.testapp.statistics;
 
 import android.telephony.CellInfo;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellInfoLte;
 import android.telephony.CellInfoWcdma;
-
-import com.mag.boikov.testapp.network_info.CdmaInfo;
-import com.mag.boikov.testapp.network_info.GsmInfo;
-import com.mag.boikov.testapp.network_info.LteInfo;
-import com.mag.boikov.testapp.network_info.PhoneCellInfo;
-import com.mag.boikov.testapp.network_info.WcdmaInfo;
 
 class CellInfoParser {
     public static PhoneCellInfo parse(CellInfo cellInfo) {

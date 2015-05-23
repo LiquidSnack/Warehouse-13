@@ -1,10 +1,10 @@
-package com.mag.boikov.testapp.network_info;
+package com.mag.boikov.testapp.statistics;
 
 import android.telephony.CellIdentityWcdma;
 import android.telephony.CellInfoWcdma;
 import android.telephony.CellSignalStrengthWcdma;
 
-public class WcdmaInfo implements PhoneCellInfo {
+class WcdmaInfo implements PhoneCellInfo {
     int asuLevel;
     int dbm;
     int cid;

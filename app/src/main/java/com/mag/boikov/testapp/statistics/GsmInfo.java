@@ -1,11 +1,11 @@
-package com.mag.boikov.testapp.network_info;
+package com.mag.boikov.testapp.statistics;
 
 import android.telephony.CellIdentityGsm;
 import android.telephony.CellInfoGsm;
 import android.telephony.CellSignalStrengthGsm;
 import android.telephony.gsm.GsmCellLocation;
 
-public class GsmInfo implements PhoneCellInfo {
+class GsmInfo implements PhoneCellInfo {
     int asuLevel;
     int dbm;
     int cid;
