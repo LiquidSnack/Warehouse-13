@@ -2,20 +2,23 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical">
-
-    <Button
-        android:id="@+id/startTest"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/start_button"/>
+              android:orientation="vertical"
+              android:padding="16dp">
 
     <TextView
         android:id="@+id/testOutput"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:enabled="true"
-        android:maxLines="20"
+        android:maxLines="32"
+        android:lines="24"
         android:scrollbars="vertical"
         android:textAppearance="?android:attr/textAppearanceMedium"/>
+
+    <Button
+        android:id="@+id/startTest"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/start_button"
+        android:gravity="center"/>
 </LinearLayout>
