@@ -3,22 +3,24 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              android:padding="16dp">
+              android:padding="@dimen/activity_vertical_margin"
+              android:weightSum="1">
 
     <TextView
         android:id="@+id/testOutput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="0.9"
         android:enabled="true"
         android:maxLines="32"
-        android:lines="24"
         android:scrollbars="vertical"
-        android:textAppearance="?android:attr/textAppearanceMedium"/>
+        android:textSize="18sp"/>
 
     <Button
         android:id="@+id/startTest"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/start_button"
-        android:gravity="center"/>
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:gravity="center"
+        android:text="@string/start_button"/>
 </LinearLayout>
