@@ -10,13 +10,16 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-class StatisticsSender extends AsyncTask<Statistics, Void, HttpStatus> {
+class SendStatisticsTask extends AsyncTask<Statistics, Void, HttpStatus> {
+    static final int TIMEOUT = 3;
+
     final String endpointUrl;
     RestTemplate restTemplate;
 
-    public StatisticsSender() {
-        endpointUrl = System.getProperty("endpointUrl");
+    public SendStatisticsTask() {
+        endpointUrl = System.getProperty("endpointUrl") + "/statistics";
         init();
     }
 
@@ -29,16 +32,25 @@ class StatisticsSender extends AsyncTask<Statistics, Void, HttpStatus> {
 
     @Override
     protected HttpStatus doInBackground(Statistics... params) {
-        try {
-            return send(params[0]);
-        } catch (Exception e) {
-            Log.e("StatisticsSender", e.toString());
-            return HttpStatus.I_AM_A_TEAPOT;
+        HttpStatus responseStatus = send(params[0]);
+        if (responseStatus != HttpStatus.CREATED) {
+            Log.e("SendFragment", "Got response status " + responseStatus);
         }
+        return responseStatus;
     }
 
     HttpStatus send(Statistics statistics) {
         return restTemplate.postForEntity(endpointUrl, statistics, Void.class)
                            .getStatusCode();
+    }
+
+    HttpStatus getResponseCode() {
+        HttpStatus httpStatus = HttpStatus.I_AM_A_TEAPOT;
+        try {
+            httpStatus = get(TIMEOUT, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            Log.e("SendFragment", e.toString());
+        }
+        return httpStatus;
     }
 }
