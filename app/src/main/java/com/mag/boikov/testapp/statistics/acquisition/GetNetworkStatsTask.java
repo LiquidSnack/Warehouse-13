@@ -139,7 +139,7 @@ public class GetNetworkStatsTask extends AsyncTask<Void, Void, NetworkStats> {
 
     public NetworkStats getNetworkData() {
         try {
-            return get(45, TimeUnit.SECONDS);
+            return get(2, TimeUnit.MINUTES);
         } catch (Exception e) {
             Log.e("GetNetworkStatistics", e.toString());
             return NetworkStats.EMPTY;

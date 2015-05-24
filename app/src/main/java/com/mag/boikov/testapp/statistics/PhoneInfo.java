@@ -77,6 +77,8 @@ public class PhoneInfo {
                 return "LTE";
             case TelephonyManager.NETWORK_TYPE_HSPAP:
                 return "HSPAP";
+            case TelephonyManager.NETWORK_TYPE_EDGE:
+                return "EDGE";
             default:
                 Log.e("PhoneInfo", "Unknown network type: " + networkType);
                 return "Undetermined";
