@@ -1,8 +1,8 @@
-package com.mag.boikov.testapp.communications;
+package com.mag.boikov.testapp.statistics.communication;
 
 import java.util.List;
 
-public class UserComments {
+class UserComments {
     String contactPhone;
     String comment;
     List<Complaint> complaints;

@@ -1,17 +1,20 @@
-package com.mag.boikov.testapp.communications;
+package com.mag.boikov.testapp.statistics.communication;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mag.boikov.testapp.network_info.PhoneCellInfo;
+import com.mag.boikov.testapp.statistics.GpsData;
+import com.mag.boikov.testapp.statistics.GsmData;
+import com.mag.boikov.testapp.statistics.NetworkStats;
+import com.mag.boikov.testapp.statistics.PhoneCellInfo;
 
 import java.util.Date;
 import java.util.Map;
 
-public class Statistics {
+class Statistics {
     GsmData gsmData;
 
     Date testPerformedAt;
 
-    NetworkData networkData;
+    NetworkStats networkStats;
 
     GpsData gpsData;
 
@@ -36,12 +39,12 @@ public class Statistics {
         this.testPerformedAt = testPerformedAt;
     }
 
-    public NetworkData getNetworkData() {
-        return networkData;
+    public NetworkStats getNetworkStats() {
+        return networkStats;
     }
 
-    public void setNetworkData(NetworkData networkData) {
-        this.networkData = networkData;
+    public void setNetworkStats(NetworkStats networkStats) {
+        this.networkStats = networkStats;
     }
 
     public GpsData getGpsData() {

@@ -4,10 +4,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.mag.boikov.testapp.statistics.acquisition.TestFragment;
+import com.mag.boikov.testapp.statistics.communication.SendFragment;
+
 import java.util.Arrays;
 import java.util.List;
 
-public class PagerAdapter extends FragmentPagerAdapter {
+class PagerAdapter extends FragmentPagerAdapter {
     static final int TEST_TAB = 0;
     static final int SEND_TAB = 1;
 

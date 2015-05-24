@@ -1,8 +1,8 @@
-package com.mag.boikov.testapp.communications;
+package com.mag.boikov.testapp.statistics.communication;
 
 import com.mag.boikov.testapp.R;
 
-public enum Complaint {
+enum Complaint {
     POOR_SOUND_QUALITY,
     CANT_HEAR_OTHER_PARTY,
     OTHER_PARTY_CANT_HEAR_ME,

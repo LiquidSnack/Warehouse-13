@@ -1,4 +1,4 @@
-package com.mag.boikov.testapp.communications;
+package com.mag.boikov.testapp.statistics;
 
 public class GsmData {
     String operatorName;

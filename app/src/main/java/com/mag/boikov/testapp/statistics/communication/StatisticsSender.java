@@ -1,4 +1,4 @@
-package com.mag.boikov.testapp.communications;
+package com.mag.boikov.testapp.statistics.communication;
 
 import android.os.AsyncTask;
 import android.util.Log;
@@ -11,7 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
-public class StatisticsSender extends AsyncTask<Statistics, Void, HttpStatus> {
+class StatisticsSender extends AsyncTask<Statistics, Void, HttpStatus> {
     final String endpointUrl;
     RestTemplate restTemplate;
 

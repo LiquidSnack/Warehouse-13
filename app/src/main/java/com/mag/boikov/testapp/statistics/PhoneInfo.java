@@ -1,4 +1,4 @@
-package com.mag.boikov.testapp.network_info.parser;
+package com.mag.boikov.testapp.statistics;
 
 import android.content.Context;
 import android.telephony.CellInfo;
@@ -7,10 +7,6 @@ import android.telephony.PhoneStateListener;
 import android.telephony.SignalStrength;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-
-import com.mag.boikov.testapp.network_info.CdmaInfo;
-import com.mag.boikov.testapp.network_info.GsmInfo;
-import com.mag.boikov.testapp.network_info.PhoneCellInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;

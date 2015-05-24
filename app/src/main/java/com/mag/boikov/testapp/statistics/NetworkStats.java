@@ -1,7 +1,7 @@
-package com.mag.boikov.testapp.communications;
+package com.mag.boikov.testapp.statistics;
 
-public class NetworkData {
-    public static final NetworkData EMPTY = new NetworkData();
+public class NetworkStats {
+    public static final NetworkStats EMPTY = new NetworkStats();
 
     Double uploadSpeed;
     Double downloadSpeed;

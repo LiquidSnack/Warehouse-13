@@ -1,10 +1,10 @@
-package com.mag.boikov.testapp.network_info;
+package com.mag.boikov.testapp.statistics;
 
 import android.telephony.CellIdentityLte;
 import android.telephony.CellInfoLte;
 import android.telephony.CellSignalStrengthLte;
 
-public class LteInfo implements PhoneCellInfo {
+class LteInfo implements PhoneCellInfo {
     int asuLevel;
     int dbm;
     int ci;

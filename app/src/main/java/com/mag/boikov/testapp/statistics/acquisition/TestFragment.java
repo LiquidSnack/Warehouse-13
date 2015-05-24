@@ -1,4 +1,4 @@
-package com.mag.boikov.testapp;
+package com.mag.boikov.testapp.statistics.acquisition;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,12 +11,12 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.mag.boikov.testapp.communications.GpsData;
-import com.mag.boikov.testapp.communications.NetworkData;
-import com.mag.boikov.testapp.network_info.GetGpsLocationTask;
-import com.mag.boikov.testapp.network_info.GetNetworkStatisticsTask;
-import com.mag.boikov.testapp.network_info.PhoneCellInfo;
-import com.mag.boikov.testapp.network_info.parser.PhoneInfo;
+import com.mag.boikov.testapp.R;
+import com.mag.boikov.testapp.statistics.GpsData;
+import com.mag.boikov.testapp.statistics.GpsLocationListener;
+import com.mag.boikov.testapp.statistics.NetworkStats;
+import com.mag.boikov.testapp.statistics.PhoneCellInfo;
+import com.mag.boikov.testapp.statistics.PhoneInfo;
 
 import java.util.Date;
 
@@ -31,8 +31,8 @@ public class TestFragment extends Fragment {
     TextView outputBox;
 
     PhoneInfo phoneInfo;
-    GetGpsLocationTask getGpsLocationTask;
-    GetNetworkStatisticsTask getNetworkStatisticsTask;
+    GpsLocationListener gpsLocationListener;
+    GetNetworkStatsTask getNetworkStatsTask;
 
     @Nullable
     @Override
@@ -46,10 +46,9 @@ public class TestFragment extends Fragment {
     void setup() {
         Context context = context();
         phoneInfo = PhoneInfo.fromContext(context);
-        getGpsLocationTask = new GetGpsLocationTask(context);
-        getNetworkStatisticsTask = new GetNetworkStatisticsTask();
         outputBox.setMovementMethod(new ScrollingMovementMethod());
         setupStartTestButton();
+        gpsLocationListener = GpsLocationListener.register(context);
     }
 
     void setupStartTestButton() {
@@ -77,28 +76,28 @@ public class TestFragment extends Fragment {
             outputBox.append('\n' + cellInfo.getCellType() + ": " + cellInfo);
         }
         outputBox.append('\n' + String.format("Datums: %Tc", new Date()));
-        appendGpsLocation();
         appendNetworkStats();
+        appendGpsLocation();
     }
 
     void executeTasks() {
-        getNetworkStatisticsTask.execute();
-        getGpsLocationTask.execute();
+        getNetworkStatsTask = new GetNetworkStatsTask();
+        getNetworkStatsTask.execute();
     }
 
     void appendGpsLocation() {
-        GpsData gpsData = getGpsLocationTask.getGpsData();
+        GpsData gpsData = gpsLocationListener.gpsData();
         if (gpsData != GpsData.EMPTY) {
             outputBox.append('\n' + "Location: " + gpsData.getLatitude() + ";" + gpsData.getLongitude());
         }
     }
 
     void appendNetworkStats() {
-        NetworkData networkData = getNetworkStatisticsTask.getNetworkData();
-        if (networkData == NetworkData.EMPTY) return;
-        outputBox.append(String.format("\nDownload Speed: %.3f Kbps", networkData.getDownloadSpeed()));
-        outputBox.append(String.format("\nUpload Speed: %.3f Kbps", networkData.getUploadSpeed()));
-        outputBox.append(String.format("\nPacket Loss: %d", networkData.getPacketLoss()) + "%");
-        outputBox.append(String.format("\nPing Time: %.1f", networkData.getPingTime()) + " ms");
+        NetworkStats networkStats = getNetworkStatsTask.getNetworkData();
+        if (networkStats == NetworkStats.EMPTY) return;
+        outputBox.append(String.format("\nDownload Speed: %.3f Kbps", networkStats.getDownloadSpeed()));
+        outputBox.append(String.format("\nUpload Speed: %.3f Kbps", networkStats.getUploadSpeed()));
+        outputBox.append(String.format("\nPacket Loss: %d", networkStats.getPacketLoss()) + "%");
+        outputBox.append(String.format("\nPing Time: %.1f", networkStats.getPingTime()) + " ms");
     }
 }

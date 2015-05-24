@@ -1,11 +1,11 @@
-package com.mag.boikov.testapp.network_info;
+package com.mag.boikov.testapp.statistics;
 
 import android.telephony.CellIdentityCdma;
 import android.telephony.CellInfoCdma;
 import android.telephony.CellSignalStrengthCdma;
 import android.telephony.cdma.CdmaCellLocation;
 
-public class CdmaInfo implements PhoneCellInfo {
+class CdmaInfo implements PhoneCellInfo {
     int networkId;
     int baseId;
     int latitude;
